@@ -86,6 +86,9 @@ namespace DailyPerformanceWarningModule
             else
                 cbSingSchoolYear.Checked = true;
 
+            //統計
+            cbStatistics.Checked = Config.StatisticsChange;
+
             tbDemeritA.Text = Config.DemeritA.ToString();
             tbDemeritB.Text = Config.DemeritB.ToString();
             tbDemeritC.Text = Config.DemeritC.ToString();
@@ -96,6 +99,7 @@ namespace DailyPerformanceWarningModule
         private void btnSave_Click(object sender, EventArgs e)
         {
             Config.Run = cbIsRun.Checked;
+            Config.StatisticsChange = cbStatistics.Checked;
 
             //單或多學期
             if (cbSingSchoolYear.Checked)
@@ -143,11 +147,20 @@ namespace DailyPerformanceWarningModule
             groupPanel6.Enabled = cbIsRun.Checked;
             groupPanel8.Enabled = cbIsRun.Checked;
             linkLabel2.Enabled = cbIsRun.Checked;
+            cbStatistics.Enabled = cbIsRun.Checked;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Run.BGW_Dem.RunWorkerAsync(false);
+             if (!Run.BGW_Dem.IsBusy)
+             {
+                  FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單..."); 
+                  Run.BGW_Dem.RunWorkerAsync(false);
+             }
+             else
+             {
+                  MsgBox.Show("系統忙碌中請稍後再試!!");
+             }
         }
     }
 }

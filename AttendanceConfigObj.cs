@@ -19,6 +19,7 @@ namespace DailyPerformanceWarningModule
         public string ConfigName = "缺曠預警訊息";
 
         public string Config_RunAttendance = "是否執行缺曠預警";
+        public string Config_StatisticsChange = "是否統計改變的學生才顯示";
         public string Config_IsSingOrAll = "單學期或所有學期";
         public string Config_SchoolYear = "學年度";
         public string Config_Semester = "學期";
@@ -58,6 +59,11 @@ namespace DailyPerformanceWarningModule
         public int AttenanceCount { get; set; }
 
         /// <summary>
+        /// 是否統計改變的學生才顯示
+        /// </summary>
+        public bool StatisticsChange { get; set; }
+
+        /// <summary>
         /// 取得目前設定內容
         /// </summary>
         public void GetConfig()
@@ -75,6 +81,12 @@ namespace DailyPerformanceWarningModule
                 SingOrAll = tool.ParseBool(cd[Config_IsSingOrAll]);
             else
                 SingOrAll = true;
+
+            //是否統計改變的學生才顯示
+            if (!string.IsNullOrEmpty(cd[Config_StatisticsChange]))
+                 StatisticsChange = tool.ParseBool(cd[Config_StatisticsChange]);
+            else
+                 StatisticsChange = false;
 
             //學年度
             if (!string.IsNullOrEmpty(cd[Config_SchoolYear]))
@@ -110,6 +122,7 @@ namespace DailyPerformanceWarningModule
         {
             cd[Config_RunAttendance] = Run.ToString();
             cd[Config_IsSingOrAll] = SingOrAll.ToString();
+            cd[Config_StatisticsChange] = StatisticsChange.ToString();
             cd[Config_SchoolYear] = SchoolYear.ToString();
             cd[Config_Semester] = Semester.ToString();
             cd[Config_AttendanceCount] = AttenanceCount.ToString();

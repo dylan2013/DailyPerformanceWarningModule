@@ -18,6 +18,7 @@ namespace DailyPerformanceWarningModule
         public string ConfigName = "懲戒預警訊息";
 
         public string Config_RunDemerit = "是否執行懲戒預警";
+        public string Config_StatisticsChange = "是否統計改變的學生才顯示";
         public string Config_IsSingOrAll = "單學期或所有學期";
         public string Config_SchoolYear = "學年度";
         public string Config_Semester = "學期";
@@ -51,6 +52,11 @@ namespace DailyPerformanceWarningModule
         /// 列印單一或多個學期
         /// </summary>
         public bool SingOrAll { get; set; }
+
+        /// <summary>
+        /// 是否統計改變的學生才顯示
+        /// </summary>
+        public bool StatisticsChange { get; set; }
 
         /// <summary>
         /// 是否進行功過相抵
@@ -91,6 +97,12 @@ namespace DailyPerformanceWarningModule
             else
                 SingOrAll = true;
 
+            //是否統計改變的學生才顯示
+            if (!string.IsNullOrEmpty(cd[Config_StatisticsChange]))
+                 StatisticsChange = tool.ParseBool(cd[Config_StatisticsChange]);
+            else
+                 StatisticsChange = false;
+
             //學年度
             if (!string.IsNullOrEmpty(cd[Config_SchoolYear]))
                 SchoolYear = tool.ParseInt(cd[Config_SchoolYear]);
@@ -124,6 +136,7 @@ namespace DailyPerformanceWarningModule
         {
             cd[Config_RunDemerit] = Run.ToString();
             cd[Config_IsSingOrAll] = SingOrAll.ToString();
+            cd[Config_StatisticsChange] = StatisticsChange.ToString();
             cd[Config_SchoolYear] = SchoolYear.ToString();
             cd[Config_Semester] = Semester.ToString();
             cd[ConfigDemeritA] = DemeritA.ToString();
