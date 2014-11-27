@@ -98,36 +98,41 @@ namespace DailyPerformanceWarningModule
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            Config.Run = cbIsRun.Checked;
-            Config.StatisticsChange = cbStatistics.Checked;
-
-            //單或多學期
-            if (cbSingSchoolYear.Checked)
-            {
-                Config.SingOrAll = true;
-                Config.SchoolYear = intSchoolYear1.Value;
-                Config.Semester = intSemester1.Value;
-            }
-            else
-            {
-                //選擇為多學期時,並指定學年期圍預設學年期
-                Config.SingOrAll = false;
-                Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
-                Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
-            }
-
-            Config.DemeritBalance = cbxIsMeritAndDemerit.Checked;
-
-            Config.DemeritA = tool.ParseInt(tbDemeritA.Text);
-            Config.DemeritB = tool.ParseInt(tbDemeritB.Text);
-            Config.DemeritC = tool.ParseInt(tbDemeritC.Text);
-
-            Config.SaveConfig();
+             SaveConfig();
 
             MsgBox.Show("儲存完成!");
 
             this.Close();
 
+        }
+
+        private void SaveConfig()
+        {
+             Config.Run = cbIsRun.Checked;
+             Config.StatisticsChange = cbStatistics.Checked;
+
+             //單或多學期
+             if (cbSingSchoolYear.Checked)
+             {
+                  Config.SingOrAll = true;
+                  Config.SchoolYear = intSchoolYear1.Value;
+                  Config.Semester = intSemester1.Value;
+             }
+             else
+             {
+                  //選擇為多學期時,並指定學年期圍預設學年期
+                  Config.SingOrAll = false;
+                  Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
+                  Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
+             }
+
+             Config.DemeritBalance = cbxIsMeritAndDemerit.Checked;
+
+             Config.DemeritA = tool.ParseInt(tbDemeritA.Text);
+             Config.DemeritB = tool.ParseInt(tbDemeritB.Text);
+             Config.DemeritC = tool.ParseInt(tbDemeritC.Text);
+
+             Config.SaveConfig();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -154,6 +159,10 @@ namespace DailyPerformanceWarningModule
         {
              if (!Run.BGW_Dem.IsBusy)
              {
+                  FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定..."); 
+
+                  SaveConfig();
+
                   FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單..."); 
                   Run.BGW_Dem.RunWorkerAsync(false);
              }

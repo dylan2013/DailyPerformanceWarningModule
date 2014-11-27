@@ -111,8 +111,15 @@ namespace DailyPerformanceWarningModule
           /// </summary>
           private void btnSave_Click(object sender, EventArgs e)
           {
+               SaveConfig();
 
-               //缺曠內容
+               MsgBox.Show("儲存完成!");
+
+               this.Close();
+          }
+
+          private void SaveConfig()
+          {
                Config.AttenanceCount = tool.ParseInt(txtPeriodCount.Text);
                Config.Run = cbIsRun.Checked;
                Config.StatisticsChange = cbStatistics.Checked;
@@ -142,10 +149,6 @@ namespace DailyPerformanceWarningModule
                }
 
                Config.SaveConfig();
-
-               MsgBox.Show("儲存完成!");
-
-               this.Close();
           }
 
           private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -179,6 +182,10 @@ namespace DailyPerformanceWarningModule
           {
                if (!Run.BGW_Att.IsBusy)
                {
+                    FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定..."); 
+
+                    SaveConfig();
+
                     FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
                     Run.BGW_Att.RunWorkerAsync(false);
                }
