@@ -98,7 +98,7 @@ namespace DailyPerformanceWarningModule
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-             SaveConfig();
+            SaveConfig();
 
             MsgBox.Show("儲存完成!");
 
@@ -108,31 +108,31 @@ namespace DailyPerformanceWarningModule
 
         private void SaveConfig()
         {
-             Config.Run = cbIsRun.Checked;
-             Config.StatisticsChange = cbStatistics.Checked;
+            Config.Run = cbIsRun.Checked;
+            Config.StatisticsChange = cbStatistics.Checked;
 
-             //單或多學期
-             if (cbSingSchoolYear.Checked)
-             {
-                  Config.SingOrAll = true;
-                  Config.SchoolYear = intSchoolYear1.Value;
-                  Config.Semester = intSemester1.Value;
-             }
-             else
-             {
-                  //選擇為多學期時,並指定學年期圍預設學年期
-                  Config.SingOrAll = false;
-                  Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
-                  Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
-             }
+            //單或多學期
+            if (cbSingSchoolYear.Checked)
+            {
+                Config.SingOrAll = true;
+                Config.SchoolYear = intSchoolYear1.Value;
+                Config.Semester = intSemester1.Value;
+            }
+            else
+            {
+                //選擇為多學期時,並指定學年期圍預設學年期
+                Config.SingOrAll = false;
+                Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
+                Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
+            }
 
-             Config.DemeritBalance = cbxIsMeritAndDemerit.Checked;
+            Config.DemeritBalance = cbxIsMeritAndDemerit.Checked;
 
-             Config.DemeritA = tool.ParseInt(tbDemeritA.Text);
-             Config.DemeritB = tool.ParseInt(tbDemeritB.Text);
-             Config.DemeritC = tool.ParseInt(tbDemeritC.Text);
+            Config.DemeritA = tool.ParseInt(tbDemeritA.Text);
+            Config.DemeritB = tool.ParseInt(tbDemeritB.Text);
+            Config.DemeritC = tool.ParseInt(tbDemeritC.Text);
 
-             Config.SaveConfig();
+            Config.SaveConfig();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -157,19 +157,54 @@ namespace DailyPerformanceWarningModule
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-             if (!Run.BGW_Dem.IsBusy)
-             {
-                  FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定..."); 
+            if (!Run.BGW_Dem.IsBusy)
+            {
+                FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
 
-                  SaveConfig();
+                SaveConfig();
 
-                  FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單..."); 
-                  Run.BGW_Dem.RunWorkerAsync(false);
-             }
-             else
-             {
-                  MsgBox.Show("系統忙碌中請稍後再試!!");
-             }
+                FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
+                Run.BGW_Dem.RunWorkerAsync(false);
+
+                btnSendMessage.Text = "推播";
+                btnSendMessage.Enabled = true;
+            }
+            else
+            {
+                MsgBox.Show("系統忙碌中請稍後再試!!");
+            }
+        }
+
+        private void btnSendMessage_Click(object sender, EventArgs e)
+        {
+            btnSendMessage.Enabled = false;
+
+            StringBuilder sb_messgae = new StringBuilder();
+            sb_messgae.AppendLine("您好，學生已達預警標準");
+            if (cbSingSchoolYear.Checked)
+            {
+                sb_messgae.AppendLine("範圍：");
+                sb_messgae.AppendLine(string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester));
+            }
+            else
+            {
+                sb_messgae.AppendLine("範圍：「所有學年期」");
+            }
+
+            sb_messgae.AppendLine(string.Format("大過「{0}」小過「{1}」警告「{2}」", Config.DemeritA, Config.DemeritB, Config.DemeritC));
+            sb_messgae.AppendLine(string.Format("是否進行功過相抵「{0}」", Config.ConfigDemeritBalance == "true" ? "是" : "否"));
+
+            ViewDetail smessage = new ViewDetail(Run._do.DemeritList.Keys.ToList(), "懲戒預警通知", sb_messgae.ToString());
+            DialogResult dr = smessage.ShowDialog();
+
+            if (dr == DialogResult.Yes)
+            {
+                btnSendMessage.Text = "推播(已發送)";
+            }
+            else
+            {
+                btnSendMessage.Enabled = true;
+            }
         }
     }
 }

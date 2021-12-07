@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DailyPerformanceWarningModule</RootNamespace>
     <AssemblyName>DailyPerformanceWarningModule</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,11 +30,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aspose.Cells, Version=4.3.0.0, Culture=neutral, PublicKeyToken=9a40d5a4b59e5256, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\Aspose.Cells.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Campus.ePaperCloud, Version=1.0.0.14, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Library\Campus.ePaperCloud.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Campus.Message, Version=1.0.0.7, Culture=neutral, processorArchitecture=MSIL">
@@ -144,6 +151,8 @@
       <DependentUpon>IsViewForm_Open.cs</DependentUpon>
     </Compile>
     <Compile Include="KeyBoStudent.cs" />
+    <Compile Include="Message\SendMessage.cs" />
+    <Compile Include="Message\Utility.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -159,6 +168,12 @@
       <DependentUpon>ReduceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Run.cs" />
+    <Compile Include="Message\ViewDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Message\ViewDetail.Designer.cs">
+      <DependentUpon>ViewDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="tool.cs" />
     <Compile Include="UDT\AttendanceWarningRecord.cs" />
     <Compile Include="UDT\DemeritWarningRecord.cs" />
@@ -183,10 +198,15 @@
     <EmbeddedResource Include="ReduceForm.resx">
       <DependentUpon>ReduceForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Message\ViewDetail.resx">
+      <DependentUpon>ViewDetail.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Library\Aspose.Cells.dll" />
     <Content Include="Library\Aspose.Cells.xml" />
+    <Content Include="Library\Campus.ePaperCloud.dll" />
+    <Content Include="Library\Campus.ePaperCloud.pdb" />
     <Content Include="Library\Campus.Message.dll" />
     <Content Include="Library\Campus.Message.pdb" />
     <Content Include="Library\Campus.Message.XML" />

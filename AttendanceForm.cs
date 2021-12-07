@@ -11,69 +11,69 @@ using System.Windows.Forms;
 
 namespace DailyPerformanceWarningModule
 {
-     public partial class AttendanceForm : BaseForm
-     {
-          /// <summary>
-          /// 設定值
-          /// </summary>
-          AttendanceConfigObj Config { get; set; }
+    public partial class AttendanceForm : BaseForm
+    {
+        /// <summary>
+        /// 設定值
+        /// </summary>
+        AttendanceConfigObj Config { get; set; }
 
-          public AttendanceForm()
-          {
-               InitializeComponent();
+        public AttendanceForm()
+        {
+            InitializeComponent();
 
-               IsBackGround = false;
+            IsBackGround = false;
 
-               BackgroundWorker BGW = new BackgroundWorker();
-               BGW.RunWorkerCompleted += BGW_RunWorkerCompleted;
-               BGW.DoWork += BGW_DoWork;
-               BGW.RunWorkerAsync();
-          }
+            BackgroundWorker BGW = new BackgroundWorker();
+            BGW.RunWorkerCompleted += BGW_RunWorkerCompleted;
+            BGW.DoWork += BGW_DoWork;
+            BGW.RunWorkerAsync();
+        }
 
-          bool IsBackGround
-          {
-               set
-               {
-                    linkLabel1.Enabled = value;
-                    btnSave.Enabled = value;
-               }
-          }
+        bool IsBackGround
+        {
+            set
+            {
+                linkLabel1.Enabled = value;
+                btnSave.Enabled = value;
+            }
+        }
 
-          void BGW_DoWork(object sender, DoWorkEventArgs e)
-          {
-               //取得相關設定值
-               Config = new AttendanceConfigObj();
-               Config.GetConfig();
-          }
+        void BGW_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //取得相關設定值
+            Config = new AttendanceConfigObj();
+            Config.GetConfig();
+        }
 
-          void BGW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-          {
-               IsBackGround = true;
-               if (!e.Cancelled)
-               {
-                    if (e.Error == null)
-                    {
-                         SetConfig();
+        void BGW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            IsBackGround = true;
+            if (!e.Cancelled)
+            {
+                if (e.Error == null)
+                {
+                    SetConfig();
 
-                         groupPanel9.Enabled = cbIsRun.Checked;
-                         groupPanel10.Enabled = cbIsRun.Checked;
-                         linkLabel1.Enabled = cbIsRun.Checked;
-                    }
-                    else
-                    {
-                         MsgBox.Show("取得資料發生錯誤\n請重新開啟本畫面!");
-                    }
-               }
-               else
-               {
-                    MsgBox.Show("已中止操作!");
-               }
-          }
+                    groupPanel9.Enabled = cbIsRun.Checked;
+                    groupPanel10.Enabled = cbIsRun.Checked;
+                    linkLabel1.Enabled = cbIsRun.Checked;
+                }
+                else
+                {
+                    MsgBox.Show("取得資料發生錯誤\n請重新開啟本畫面!");
+                }
+            }
+            else
+            {
+                MsgBox.Show("已中止操作!");
+            }
+        }
 
-          /// <summary>
-          /// 設定畫面上的資料
-          /// </summary>
-          private void SetConfig()
+        /// <summary>
+        /// 設定畫面上的資料
+        /// </summary>
+        private void SetConfig()
         {
             cbIsRun.Checked = Config.Run;
 
@@ -88,7 +88,7 @@ namespace DailyPerformanceWarningModule
 
             //統計
             cbStatistics.Checked = Config.StatisticsChange;
-        
+
 
 
             txtPeriodCount.Text = Config.AttenanceCount.ToString();
@@ -106,95 +106,135 @@ namespace DailyPerformanceWarningModule
             }
         }
 
-          /// <summary>
-          /// 儲存相關設定值
-          /// </summary>
-          private void btnSave_Click(object sender, EventArgs e)
-          {
-               SaveConfig();
+        /// <summary>
+        /// 儲存相關設定值
+        /// </summary>
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveConfig();
 
-               MsgBox.Show("儲存完成!");
+            MsgBox.Show("儲存完成!");
 
-               this.Close();
-          }
+            this.Close();
+        }
 
-          private void SaveConfig()
-          {
-               Config.AttenanceCount = tool.ParseInt(txtPeriodCount.Text);
-               Config.Run = cbIsRun.Checked;
-               Config.StatisticsChange = cbStatistics.Checked;
-               //單或多學期
-               if (cbSingSchoolYear.Checked)
-               {
-                    Config.SingOrAll = true;
-                    Config.SchoolYear = intSchoolYear1.Value;
-                    Config.Semester = intSemester1.Value;
-               }
-               else
-               {
-                    //選擇為多學期時,指定學年期圍預設學年期
-                    Config.SingOrAll = false;
-                    Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
-                    Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
-               }
+        private void SaveConfig()
+        {
+            Config.AttenanceCount = tool.ParseInt(txtPeriodCount.Text);
+            Config.Run = cbIsRun.Checked;
+            Config.StatisticsChange = cbStatistics.Checked;
+            //單或多學期
+            if (cbSingSchoolYear.Checked)
+            {
+                Config.SingOrAll = true;
+                Config.SchoolYear = intSchoolYear1.Value;
+                Config.Semester = intSemester1.Value;
+            }
+            else
+            {
+                //選擇為多學期時,指定學年期圍預設學年期
+                Config.SingOrAll = false;
+                Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
+                Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
+            }
 
-               //假別條件
-               Config.AttendanceList.Clear();
-               foreach (ListViewItem item in listViewEx1.Items)
-               {
-                    if (item.Checked)
-                    {
-                         Config.AttendanceList.Add(item.Text);
-                    }
-               }
+            //假別條件
+            Config.AttendanceList.Clear();
+            foreach (ListViewItem item in listViewEx1.Items)
+            {
+                if (item.Checked)
+                {
+                    Config.AttendanceList.Add(item.Text);
+                }
+            }
 
-               Config.SaveConfig();
-          }
+            Config.SaveConfig();
+        }
 
-          private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-          {
-               BalanceConfigForm BCForm = new BalanceConfigForm();
-               BCForm.ShowDialog();
-          }
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            BalanceConfigForm BCForm = new BalanceConfigForm();
+            BCForm.ShowDialog();
+        }
 
-          private void cbxSelectAllPeriod_CheckedChanged(object sender, EventArgs e)
-          {
-               foreach (ListViewItem each in listViewEx1.Items)
-               {
-                    each.Checked = cbxSelectAllPeriod.Checked;
-               }
-          }
+        private void cbxSelectAllPeriod_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (ListViewItem each in listViewEx1.Items)
+            {
+                each.Checked = cbxSelectAllPeriod.Checked;
+            }
+        }
 
-          private void btnExit_Click(object sender, EventArgs e)
-          {
-               this.Close();
-          }
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 
-          private void checkBoxX1_CheckedChanged(object sender, EventArgs e)
-          {
-               groupPanel9.Enabled = cbIsRun.Checked;
-               groupPanel10.Enabled = cbIsRun.Checked;
-               linkLabel1.Enabled = cbIsRun.Checked;
-               cbStatistics.Enabled = cbIsRun.Checked;
-          }
+        private void checkBoxX1_CheckedChanged(object sender, EventArgs e)
+        {
+            groupPanel9.Enabled = cbIsRun.Checked;
+            groupPanel10.Enabled = cbIsRun.Checked;
+            linkLabel1.Enabled = cbIsRun.Checked;
+            cbStatistics.Enabled = cbIsRun.Checked;
+        }
 
-          private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-          {
-               if (!Run.BGW_Att.IsBusy)
-               {
-                    FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定..."); 
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (!Run.BGW_Att.IsBusy)
+            {
+                FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
 
-                    SaveConfig();
+                SaveConfig();
 
-                    FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
-                    Run.BGW_Att.RunWorkerAsync(false);
-               }
-               else
-               {
-                    MsgBox.Show("系統忙碌中請稍後再試!!");
-               }
-          }
+                FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
 
-     }
+                Run.BGW_Att.RunWorkerAsync(false);
+
+
+                btnSendMessage.Text = "推播";
+                btnSendMessage.Enabled = true;
+            }
+            else
+            {
+                MsgBox.Show("系統忙碌中請稍後再試!!");
+            }
+        }
+
+        private void btnSendMessage_Click(object sender, EventArgs e)
+        {
+            //Run._do.AttendanceList
+            btnSendMessage.Enabled = false;
+
+            StringBuilder sb_messgae = new StringBuilder();
+            sb_messgae.AppendLine("您好，學生已達預警標準");
+            if (cbSingSchoolYear.Checked)
+            {
+                sb_messgae.AppendLine("範圍：");
+                sb_messgae.AppendLine(string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester));
+            }
+            else
+            {
+                sb_messgae.AppendLine("範圍：「所有學年期」");
+            }
+            
+            sb_messgae.AppendLine(string.Format("缺曠累積節次「{0}」", Config.AttenanceCount));
+            sb_messgae.AppendLine(string.Format("學生缺曠假別包含「{0}」", string.Join("，", Config.AttendanceList)));
+
+
+
+
+            ViewDetail smessage = new ViewDetail(Run._do.AttendanceList.Keys.ToList(), "缺曠預警通知", sb_messgae.ToString());
+            DialogResult dr =  smessage.ShowDialog();
+            if (dr == DialogResult.Yes)
+            {
+                btnSendMessage.Text = "推播(已發送)";
+            }
+            else
+            {
+                btnSendMessage.Enabled = true;
+            }
+
+        }
+    }
 
 }
