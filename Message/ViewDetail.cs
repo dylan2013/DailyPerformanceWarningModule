@@ -16,7 +16,6 @@ namespace DailyPerformanceWarningModule
         List<string> _IDList;
         string _title;
         string _message;
-        string _fileName;
         FISCA.Data.QueryHelper _q = new FISCA.Data.QueryHelper();
 
         BackgroundWorker bgw = new BackgroundWorker();
@@ -53,7 +52,14 @@ namespace DailyPerformanceWarningModule
                 if (!bgw.IsBusy)
                 {
                     _title = tbTitle.Text;
-                    _message = textBoxX1.Text;
+                    _message = textBoxX1.Text.Replace("\r\n", "</br>");
+                    _IDList.Clear();
+                    foreach (DataGridViewRow row in dataGridViewX1.Rows)
+                    {
+                        string id = "" + row.Cells[0].Value;
+                        _IDList.Add(id);
+                    }
+
                     bgw.RunWorkerAsync();
                 }
                 else

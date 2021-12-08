@@ -22,6 +22,11 @@ namespace DailyPerformanceWarningModule
         /// </summary>
         public Dictionary<string, KeyBoStudent> StudentDic { get; set; }
 
+        /// <summary>
+        /// 及時設定
+        /// </summary>
+        public  IsSaveOrShow _SaveOfShow { get; set; }
+
         public DoWorkObj()
         {
             AttendanceList = new Dictionary<string, KeyBoStudent>();

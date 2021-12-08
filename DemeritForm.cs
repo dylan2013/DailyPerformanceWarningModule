@@ -21,21 +21,11 @@ namespace DailyPerformanceWarningModule
         {
             InitializeComponent();
 
-            IsBackGround = false;
             BackgroundWorker BGW = new BackgroundWorker();
             BGW.RunWorkerCompleted += BGW_RunWorkerCompleted;
             BGW.DoWork += BGW_DoWork;
 
             BGW.RunWorkerAsync();
-        }
-
-        bool IsBackGround
-        {
-            set
-            {
-                linkLabel2.Enabled = value;
-                btnSave.Enabled = value;
-            }
         }
 
         void BGW_DoWork(object sender, DoWorkEventArgs e)
@@ -47,17 +37,11 @@ namespace DailyPerformanceWarningModule
 
         void BGW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            IsBackGround = true;
             if (!e.Cancelled)
             {
                 if (e.Error == null)
                 {
                     SetConfig();
-
-                    groupPanel9.Enabled = cbIsRun.Checked;
-                    groupPanel6.Enabled = cbIsRun.Checked;
-                    groupPanel8.Enabled = cbIsRun.Checked;
-                    linkLabel2.Enabled = cbIsRun.Checked;
                 }
                 else
                 {
@@ -94,16 +78,8 @@ namespace DailyPerformanceWarningModule
             tbDemeritC.Text = Config.DemeritC.ToString();
 
             cbxIsMeritAndDemerit.Checked = Config.DemeritBalance;
-        }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveConfig();
-
-            MsgBox.Show("儲存完成!");
-
-            this.Close();
-
+            textBoxX1.Text = Config.DemeritMessage.Replace("\n","\r\n");
         }
 
         private void SaveConfig()
@@ -132,6 +108,8 @@ namespace DailyPerformanceWarningModule
             Config.DemeritB = tool.ParseInt(tbDemeritB.Text);
             Config.DemeritC = tool.ParseInt(tbDemeritC.Text);
 
+            Config.DemeritMessage = textBoxX1.Text.Replace("\r\n", "\n");
+
             Config.SaveConfig();
         }
 
@@ -146,17 +124,12 @@ namespace DailyPerformanceWarningModule
             config.ShowDialog();
         }
 
-        private void checkBoxX1_CheckedChanged(object sender, EventArgs e)
+        private void btnSendMessage_Click(object sender, EventArgs e)
         {
-            groupPanel9.Enabled = cbIsRun.Checked;
-            groupPanel6.Enabled = cbIsRun.Checked;
-            groupPanel8.Enabled = cbIsRun.Checked;
-            linkLabel2.Enabled = cbIsRun.Checked;
-            cbStatistics.Enabled = cbIsRun.Checked;
-        }
+            btnSendMessage.Enabled = false;
+            btnSendMessage.Text = "推播(開始發送作業)";
+            Run.BGW_Dem.RunWorkerCompleted += BGW_Dem_RunWorkerCompleted;
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
             if (!Run.BGW_Dem.IsBusy)
             {
                 FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
@@ -164,47 +137,75 @@ namespace DailyPerformanceWarningModule
                 SaveConfig();
 
                 FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
-                Run.BGW_Dem.RunWorkerAsync(false);
 
-                btnSendMessage.Text = "推播";
-                btnSendMessage.Enabled = true;
+
+                IsSaveOrShow show = new IsSaveOrShow();
+                show.IsSave = cbStatistics.Checked; //控制已經預警過的學生
+                show.NowRun = true; //立即執行
+                Run.BGW_Dem.RunWorkerAsync(show);
             }
             else
             {
+                btnSendMessage.Enabled = true;
                 MsgBox.Show("系統忙碌中請稍後再試!!");
             }
         }
 
-        private void btnSendMessage_Click(object sender, EventArgs e)
+        private void BGW_Dem_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            btnSendMessage.Enabled = false;
-
-            StringBuilder sb_messgae = new StringBuilder();
-            sb_messgae.AppendLine("您好，學生已達預警標準");
-            if (cbSingSchoolYear.Checked)
+            string message = SetText(textBoxX1.Text);
+            DoWorkObj _do = (DoWorkObj)e.Result;
+            if (_do.DemeritList.Count > 0)
             {
-                sb_messgae.AppendLine("範圍：");
-                sb_messgae.AppendLine(string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester));
+                Run.CompletedAtt(_do);
+                ViewDetail smessage = new ViewDetail(_do.DemeritList.Keys.ToList(), "懲戒預警通知", message);
+                DialogResult dr = smessage.ShowDialog();
+
+                if (dr == DialogResult.Yes)
+                {
+                    btnSendMessage.Text = "推播(已發送)";
+                }
+                else
+                {
+                    btnSendMessage.Text = "推播(已取消)";
+                }
             }
             else
             {
-                sb_messgae.AppendLine("範圍：「所有學年期」");
+                btnSendMessage.Text = "推播(查無符合條件)";
             }
 
-            sb_messgae.AppendLine(string.Format("大過「{0}」小過「{1}」警告「{2}」", Config.DemeritA, Config.DemeritB, Config.DemeritC));
-            sb_messgae.AppendLine(string.Format("是否進行功過相抵「{0}」", Config.ConfigDemeritBalance == "true" ? "是" : "否"));
+            Run.BGW_Dem.RunWorkerCompleted -= BGW_Dem_RunWorkerCompleted;
+            btnSendMessage.Enabled = true;
+        }
 
-            ViewDetail smessage = new ViewDetail(Run._do.DemeritList.Keys.ToList(), "懲戒預警通知", sb_messgae.ToString());
-            DialogResult dr = smessage.ShowDialog();
+        private string SetText(string text)
+        {
+            text = text.Replace("{{學年期}}", cbSingSchoolYear.Checked ? string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester) : "學年期「所有」");
+            text = text.Replace("{{大過}}", "" + Config.DemeritA);
+            text = text.Replace("{{小過}}", "" + Config.DemeritB);
+            text = text.Replace("{{警告}}", "" + Config.DemeritC);
+            text = text.Replace("{{功過相抵}}", Config.ConfigDemeritBalance == "true" ? "是" : "否");
+            return text;
+        }
 
-            if (dr == DialogResult.Yes)
-            {
-                btnSendMessage.Text = "推播(已發送)";
-            }
-            else
-            {
-                btnSendMessage.Enabled = true;
-            }
+        private void cbIsRun_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveConfig();
+        }
+
+        private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            textBoxX1.Text = @"親愛的家長您好
+貴子弟 已達「懲戒預警」標準
+請留意與檢視「懲戒資料」狀況
+課業問題，可立即向導師或主任反映與尋求協助
+如有釐清生涯志趣等疑惑，可由諮商中心幫忙
+學校許多資源，敬請多加利用
+
+本次預警條件如下：{{學年期}}
+大過「{{大過}}」小過「{{小過}}」警告「{{警告}}」
+是否功過相抵「{{功過相抵}}」";
         }
     }
 }

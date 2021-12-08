@@ -26,6 +26,8 @@ namespace DailyPerformanceWarningModule
         public string Config_AttendanceCount = "缺曠累積節次";
         public string Config_AttendanceName = "累積缺曠名稱";
 
+        public string Config_AttendanceMessage = "缺曠預警訊息";
+
         /// <summary>
         /// 設定檔
         /// </summary>
@@ -62,6 +64,11 @@ namespace DailyPerformanceWarningModule
         /// 是否統計改變的學生才顯示
         /// </summary>
         public bool StatisticsChange { get; set; }
+
+        /// <summary>
+        /// 缺曠預警訊息
+        /// </summary>
+        public string AttendanceMessage { get; set; }
 
         /// <summary>
         /// 取得目前設定內容
@@ -113,6 +120,9 @@ namespace DailyPerformanceWarningModule
             {
                 AttendanceList = new List<string>();
             }
+
+
+            AttendanceMessage = cd[Config_AttendanceMessage];
         }
 
         /// <summary>
@@ -127,6 +137,7 @@ namespace DailyPerformanceWarningModule
             cd[Config_Semester] = Semester.ToString();
             cd[Config_AttendanceCount] = AttenanceCount.ToString();
             cd[Config_AttendanceName] = string.Join(",", AttendanceList);
+            cd[Config_AttendanceMessage] = AttendanceMessage;
             cd.Save();
         }
     }

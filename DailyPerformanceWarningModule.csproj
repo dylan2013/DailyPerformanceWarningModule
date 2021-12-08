@@ -245,6 +245,8 @@
     <Content Include="Library\K12.Data.xml" />
     <Content Include="Library\K12.Presentation.dll" />
     <Content Include="Library\K12.Presentation.xml" />
+    <None Include="Resources\laws_info_64.png" />
+    <None Include="Resources\lesson_planning_info_64.png" />
     <None Include="Resources\sandglass_unlock_64.png" />
   </ItemGroup>
   <ItemGroup />

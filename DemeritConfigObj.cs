@@ -26,6 +26,7 @@ namespace DailyPerformanceWarningModule
         public string ConfigDemeritB = "小過";
         public string ConfigDemeritC = "警告";
         public string ConfigDemeritBalance = "是否進行功過相抵";
+        public string ConfigMessage = "懲戒預警訊息";
 
 
         /// <summary>
@@ -79,6 +80,11 @@ namespace DailyPerformanceWarningModule
         public int DemeritC { get; set; }
 
         /// <summary>
+        /// 懲戒預警訊息
+        /// </summary>
+        public string DemeritMessage { get; set; }
+
+        /// <summary>
         /// 取得目前設定內容
         /// </summary>
         public void GetConfig()
@@ -126,6 +132,8 @@ namespace DailyPerformanceWarningModule
             DemeritB = tool.ParseInt(cd[ConfigDemeritB]);
             DemeritC = tool.ParseInt(cd[ConfigDemeritC]);
 
+            DemeritMessage = cd[ConfigMessage];
+
         }
 
 
@@ -143,7 +151,7 @@ namespace DailyPerformanceWarningModule
             cd[ConfigDemeritB] = DemeritB.ToString();
             cd[ConfigDemeritC] = DemeritC.ToString();
             cd[ConfigDemeritBalance] = DemeritBalance.ToString();
-
+            cd[ConfigMessage] = DemeritMessage;
             cd.Save();
         }
     }

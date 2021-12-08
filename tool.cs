@@ -183,9 +183,9 @@ namespace DailyPerformanceWarningModule
         {
             int xx;
             if (t)
-                xx = (y * Run.r.MeritBToMeritC.Value) + ((x * Run.r.MeritAToMeritB.Value) * Run.r.MeritBToMeritC.Value) + z;
+                xx = (y * Run.reduce.MeritBToMeritC.Value) + ((x * Run.reduce.MeritAToMeritB.Value) * Run.reduce.MeritBToMeritC.Value) + z;
             else
-                xx = (y * Run.r.DemeritBToDemeritC.Value) + ((x * Run.r.DemeritAToDemeritB.Value) * Run.r.DemeritBToDemeritC.Value) + z;
+                xx = (y * Run.reduce.DemeritBToDemeritC.Value) + ((x * Run.reduce.DemeritAToDemeritB.Value) * Run.reduce.DemeritBToDemeritC.Value) + z;
 
             return xx;
         }

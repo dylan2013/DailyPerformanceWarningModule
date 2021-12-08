@@ -26,24 +26,38 @@ namespace DailyPerformanceWarningModule
             Run.DoInBGW();
 
             if (Permissions.缺曠預警設定權限)
-                Run.BGW_Att.RunWorkerAsync(true);
+            {
+                IsSaveOrShow show = new IsSaveOrShow();
+                show.IsSave = true; //控制已經預警過的學生
+                show.NowRun = false; //立即執行
+                show.IsShow = true; //是否顯示左下視窗
+                Run.BGW_Att.RunWorkerAsync(show);
+            }
 
             if (Permissions.懲戒預警設定權限)
-                Run.BGW_Dem.RunWorkerAsync(true);
+            {
+                IsSaveOrShow show = new IsSaveOrShow();
+                show.IsSave = true; //控制已經預警過的學生
+                show.NowRun = false; //立即執行
+                show.IsShow = true; //是否顯示左下視窗
+                Run.BGW_Dem.RunWorkerAsync(show);
+            }
 
 
-            RibbonBarItem item = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "基本設定"];
-            item["設定"].Image = Properties.Resources.sandglass_unlock_64;
-            item["設定"].Size = RibbonBarButton.MenuButtonSize.Large;
-            item["設定"]["缺曠預警設定"].Enable = Permissions.缺曠預警設定權限;
-            item["設定"]["缺曠預警設定"].Click += delegate
+            RibbonBarItem item = FISCA.Presentation.MotherForm.RibbonBarItems["學務作業", "預警系統"];
+            item["缺曠預警設定(推播)"].Image = Properties.Resources.lesson_planning_info_64;
+            item["缺曠預警設定(推播)"].Size = RibbonBarButton.MenuButtonSize.Medium;
+            item["缺曠預警設定(推播)"].Enable = Permissions.缺曠預警設定權限;
+            item["缺曠預警設定(推播)"].Click += delegate
             {
                 AttendanceForm con = new AttendanceForm();
                 con.ShowDialog();
             };
 
-            item["設定"]["懲戒預警設定"].Enable = Permissions.懲戒預警設定權限;
-            item["設定"]["懲戒預警設定"].Click += delegate
+            item["懲戒預警設定(推播)"].Image = Properties.Resources.laws_info_64;
+            item["懲戒預警設定(推播)"].Size = RibbonBarButton.MenuButtonSize.Medium;
+            item["懲戒預警設定(推播)"].Enable = Permissions.懲戒預警設定權限;
+            item["懲戒預警設定(推播)"].Click += delegate
             {
                 DemeritForm con = new DemeritForm();
                 con.ShowDialog();
@@ -51,8 +65,8 @@ namespace DailyPerformanceWarningModule
 
 
             FISCA.Permission.Catalog TestCatalog3 = FISCA.Permission.RoleAclSource.Instance["學務作業"]["功能按鈕"];
-            TestCatalog3.Add(new FISCA.Permission.RibbonFeature(Permissions.缺曠預警設定, "缺曠預警設定"));
-            TestCatalog3.Add(new FISCA.Permission.RibbonFeature(Permissions.懲戒預警設定, "懲戒預警設定"));
+            TestCatalog3.Add(new FISCA.Permission.RibbonFeature(Permissions.缺曠預警設定, "缺曠預警設定(推播)"));
+            TestCatalog3.Add(new FISCA.Permission.RibbonFeature(Permissions.懲戒預警設定, "懲戒預警設定(推播)"));
         }
 
         private static void UDTConfig()

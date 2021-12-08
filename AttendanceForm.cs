@@ -22,21 +22,10 @@ namespace DailyPerformanceWarningModule
         {
             InitializeComponent();
 
-            IsBackGround = false;
-
             BackgroundWorker BGW = new BackgroundWorker();
             BGW.RunWorkerCompleted += BGW_RunWorkerCompleted;
             BGW.DoWork += BGW_DoWork;
             BGW.RunWorkerAsync();
-        }
-
-        bool IsBackGround
-        {
-            set
-            {
-                linkLabel1.Enabled = value;
-                btnSave.Enabled = value;
-            }
         }
 
         void BGW_DoWork(object sender, DoWorkEventArgs e)
@@ -48,16 +37,11 @@ namespace DailyPerformanceWarningModule
 
         void BGW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            IsBackGround = true;
             if (!e.Cancelled)
             {
                 if (e.Error == null)
                 {
                     SetConfig();
-
-                    groupPanel9.Enabled = cbIsRun.Checked;
-                    groupPanel10.Enabled = cbIsRun.Checked;
-                    linkLabel1.Enabled = cbIsRun.Checked;
                 }
                 else
                 {
@@ -104,18 +88,8 @@ namespace DailyPerformanceWarningModule
                 }
                 listViewEx1.Items.Add(item);
             }
-        }
 
-        /// <summary>
-        /// 儲存相關設定值
-        /// </summary>
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveConfig();
-
-            MsgBox.Show("儲存完成!");
-
-            this.Close();
+            textBoxX1.Text = Config.AttendanceMessage.Replace("\n", "\r\n");
         }
 
         private void SaveConfig()
@@ -147,7 +121,7 @@ namespace DailyPerformanceWarningModule
                     Config.AttendanceList.Add(item.Text);
                 }
             }
-
+            Config.AttendanceMessage = textBoxX1.Text.Replace("\r\n", "\n");
             Config.SaveConfig();
         }
 
@@ -170,16 +144,11 @@ namespace DailyPerformanceWarningModule
             this.Close();
         }
 
-        private void checkBoxX1_CheckedChanged(object sender, EventArgs e)
+        private void btnSendMessage_Click(object sender, EventArgs e)
         {
-            groupPanel9.Enabled = cbIsRun.Checked;
-            groupPanel10.Enabled = cbIsRun.Checked;
-            linkLabel1.Enabled = cbIsRun.Checked;
-            cbStatistics.Enabled = cbIsRun.Checked;
-        }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
+            btnSendMessage.Enabled = false;
+            btnSendMessage.Text = "推播(開始發送作業)";
+            Run.BGW_Att.RunWorkerCompleted += BGW_Att_RunWorkerCompleted;
             if (!Run.BGW_Att.IsBusy)
             {
                 FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
@@ -188,52 +157,71 @@ namespace DailyPerformanceWarningModule
 
                 FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
 
-                Run.BGW_Att.RunWorkerAsync(false);
-
-
-                btnSendMessage.Text = "推播";
-                btnSendMessage.Enabled = true;
+                IsSaveOrShow show = new IsSaveOrShow();
+                show.IsSave = cbStatistics.Checked; //控制已經預警過的學生
+                show.NowRun = true; //立即執行
+                show.IsShow = false;
+                Run.BGW_Att.RunWorkerAsync(show);
             }
             else
             {
+                btnSendMessage.Enabled = true;
                 MsgBox.Show("系統忙碌中請稍後再試!!");
             }
         }
 
-        private void btnSendMessage_Click(object sender, EventArgs e)
+        private void BGW_Att_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //Run._do.AttendanceList
-            btnSendMessage.Enabled = false;
+            string message = SetText(textBoxX1.Text);
+            DoWorkObj _do = (DoWorkObj)e.Result;
 
-            StringBuilder sb_messgae = new StringBuilder();
-            sb_messgae.AppendLine("您好，學生已達預警標準");
-            if (cbSingSchoolYear.Checked)
+            if (_do.AttendanceList.Count > 0)
             {
-                sb_messgae.AppendLine("範圍：");
-                sb_messgae.AppendLine(string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester));
+                ViewDetail smessage = new ViewDetail(_do.AttendanceList.Keys.ToList(), "缺曠預警通知", message);
+                DialogResult dr = smessage.ShowDialog();
+                if (dr == DialogResult.Yes)
+                {
+                    btnSendMessage.Text = "推播(已發送)";
+                }
+                else
+                {
+                    btnSendMessage.Text = "推播(已取消)";
+                }
             }
             else
             {
-                sb_messgae.AppendLine("範圍：「所有學年期」");
-            }
-            
-            sb_messgae.AppendLine(string.Format("缺曠累積節次「{0}」", Config.AttenanceCount));
-            sb_messgae.AppendLine(string.Format("學生缺曠假別包含「{0}」", string.Join("，", Config.AttendanceList)));
-
-
-
-
-            ViewDetail smessage = new ViewDetail(Run._do.AttendanceList.Keys.ToList(), "缺曠預警通知", sb_messgae.ToString());
-            DialogResult dr =  smessage.ShowDialog();
-            if (dr == DialogResult.Yes)
-            {
-                btnSendMessage.Text = "推播(已發送)";
-            }
-            else
-            {
-                btnSendMessage.Enabled = true;
+                btnSendMessage.Text = "推播(查無符合條件)";
             }
 
+            Run.BGW_Att.RunWorkerCompleted -= BGW_Att_RunWorkerCompleted;
+            btnSendMessage.Enabled = true;
+        }
+
+        private string SetText(string text)
+        {
+            text = text.Replace("{{學年期}}", cbSingSchoolYear.Checked ? string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester) : "學年期「所有」");
+            text = text.Replace("{{節次}}", "" + Config.AttenanceCount);
+            text = text.Replace("{{假別}}", "" + string.Join(",",Config.AttendanceList));
+            return text;
+        }
+
+        private void cbIsRun_CheckedChanged(object sender, EventArgs e)
+        {
+            SaveConfig();
+        }
+
+        private void linkLabel2_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            textBoxX1.Text = @"親愛的家長您好
+貴子弟 已達「缺曠預警」標準
+請留意與檢視「缺曠資料」狀況
+課業問題，可立即向導師或主任反映與尋求協助
+如有釐清生涯志趣等疑惑，可由諮商中心幫忙
+學校許多資源，敬請多加利用
+
+本次預警條件如下：{{學年期}}
+「假別」包含「{{假別}}」
+「節次」累積達「{{節次}}」以上";
         }
     }
 

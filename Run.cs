@@ -11,7 +11,7 @@ namespace DailyPerformanceWarningModule
 {
     static public class Run
     {
-        static public K12.Data.MeritDemeritReduceRecord r { get; set; }
+        static public K12.Data.MeritDemeritReduceRecord reduce { get; set; }
 
         public static AttendanceConfigObj AttConfig { get; set; }
         public static DemeritConfigObj DemConfig { get; set; }
@@ -36,16 +36,14 @@ namespace DailyPerformanceWarningModule
 
         static void BGW_Att_DoWork(object sender, DoWorkEventArgs e)
         {
-            bool IsSave = (bool)e.Argument;
-
             DoWorkObj obj = new DoWorkObj();
-
+            obj._SaveOfShow = (IsSaveOrShow)e.Argument;
             //學生ID : 學生
             obj.StudentDic = tool.GetStudentList();
 
             if (Permissions.缺曠預警設定權限)
             {
-                Run.RunAtt(obj, IsSave);
+                Run.RunAtt(obj, obj._SaveOfShow);
             }
 
             e.Result = obj;
@@ -77,16 +75,14 @@ namespace DailyPerformanceWarningModule
 
         static void BGW_Dem_DoWork(object sender, DoWorkEventArgs e)
         {
-            bool IsSave = (bool)e.Argument;
-
             DoWorkObj obj = new DoWorkObj();
-
+            obj._SaveOfShow = (IsSaveOrShow)e.Argument;
             //學生ID : 學生
             obj.StudentDic = tool.GetStudentList();
 
             if (Permissions.懲戒預警設定權限)
             {
-                Run.RunDem(obj, IsSave);
+                Run.RunDem(obj, obj._SaveOfShow);
             }
 
             e.Result = obj;
@@ -116,7 +112,7 @@ namespace DailyPerformanceWarningModule
                 MsgBox.Show("作業已取消!!");
         }
 
-        public static void RunAtt(DoWorkObj obj, bool IsSave)
+        public static void RunAtt(DoWorkObj obj, IsSaveOrShow IsSave)
         {
             #region 取得缺曠戳記
 
@@ -146,12 +142,12 @@ namespace DailyPerformanceWarningModule
             AttConfig = new AttendanceConfigObj();
             AttConfig.GetConfig();
 
-            if (AttConfig.Run) //是否執行
+            if (AttConfig.Run || IsSave.NowRun) //是否執行
             {
                 foreach (KeyBoStudent each in GetAttWainneList(AttConfig, obj).Values)
                 {
 
-                    if (IsSave) //是否為登入模式
+                    if (IsSave.IsSave) //是否為登入模式
                     {
                         if (AttConfig.StatisticsChange)
                         {
@@ -225,7 +221,7 @@ namespace DailyPerformanceWarningModule
 
             #region 移除或新增戳記
 
-            if (IsSave)
+            if (IsSave.IsSave)
             {
                 try
                 {
@@ -247,10 +243,10 @@ namespace DailyPerformanceWarningModule
             #endregion
         }
 
-        public static void RunDem(DoWorkObj obj, bool IsSave)
+        public static void RunDem(DoWorkObj obj, IsSaveOrShow IsSave)
         {
             //取得功過換算表,以Count預警懲戒數
-            r = K12.Data.MeritDemeritReduce.Select();
+            reduce = K12.Data.MeritDemeritReduce.Select();
 
             #region 取得懲戒戳記
 
@@ -283,7 +279,7 @@ namespace DailyPerformanceWarningModule
             //設定值先進行換算
             int Configw = tool.GetBalance(DemConfig.DemeritA, DemConfig.DemeritB, DemConfig.DemeritC, false);
 
-            if (DemConfig.Run) //是否執行
+            if (DemConfig.Run || IsSave.NowRun) //是否執行
             {
                 foreach (KeyBoStudent each in GetDemeritWainneList(DemConfig, obj).Values)
                 {
@@ -304,7 +300,7 @@ namespace DailyPerformanceWarningModule
 
                     #endregion
 
-                    if (IsSave)
+                    if (IsSave.IsSave)
                     {
                         if (DemConfig.StatisticsChange)
                         {
@@ -369,7 +365,7 @@ namespace DailyPerformanceWarningModule
 
             #region 移除或新增戳記
 
-            if (IsSave)
+            if (IsSave.IsSave)
             {
                 try
                 {
@@ -526,13 +522,17 @@ namespace DailyPerformanceWarningModule
                 sb.AppendLine(string.Format("班級「{0}」座號「{1}」學生「{2}」缺曠節次「{3}」", ke.ClassName, ke.SeatNo, ke.Name, ke.AttendanceCount));
             }
 
-            CustomRecord cr = new CustomRecord();
-            cr.Content = sb.ToString();
-            cr.Title = "缺曠預警系統";
-            cr.Type = Campus.Message.CrType.Type.Warning_Red;
-            cr.OtherMore = new IsViewForm_Open(sb.ToString(), _do, true);
+            if (_do._SaveOfShow.IsShow)
+            {
+                CustomRecord cr = new CustomRecord();
+                cr.Content = sb.ToString();
+                cr.Title = "缺曠預警系統";
+                cr.Type = Campus.Message.CrType.Type.Warning_Red;
+                cr.OtherMore = new IsViewForm_Open(sb.ToString(), _do, true);
 
-            MessageRobot.AddMessage(cr);
+                MessageRobot.AddMessage(cr);
+            }
+
 
             #endregion
         }
@@ -557,11 +557,11 @@ namespace DailyPerformanceWarningModule
                     int x = z - y; //大於0表示懲戒狀態(功過換算)
 
                     //警告
-                    int xx = x % Run.r.DemeritBToDemeritC.Value;
+                    int xx = x % Run.reduce.DemeritBToDemeritC.Value;
                     //小過
-                    int yy = (x / Run.r.DemeritBToDemeritC.Value) % Run.r.DemeritAToDemeritB.Value;
+                    int yy = (x / Run.reduce.DemeritBToDemeritC.Value) % Run.reduce.DemeritAToDemeritB.Value;
                     //大過
-                    int zz = (x / Run.r.DemeritBToDemeritC.Value) / Run.r.DemeritAToDemeritB.Value;
+                    int zz = (x / Run.reduce.DemeritBToDemeritC.Value) / Run.reduce.DemeritAToDemeritB.Value;
 
                     ke.DemeritA = zz;
                     ke.DemeritB = yy;
@@ -572,11 +572,11 @@ namespace DailyPerformanceWarningModule
                 else
                 {
                     //警告
-                    int xx = ke.DemeritC % Run.r.DemeritBToDemeritC.Value;
+                    int xx = ke.DemeritC % Run.reduce.DemeritBToDemeritC.Value;
                     //小過
-                    int yy = (ke.DemeritC / Run.r.DemeritBToDemeritC.Value) % Run.r.DemeritAToDemeritB.Value;
+                    int yy = (ke.DemeritC / Run.reduce.DemeritBToDemeritC.Value) % Run.reduce.DemeritAToDemeritB.Value;
                     //大過
-                    int zz = (ke.DemeritC / Run.r.DemeritBToDemeritC.Value) / Run.r.DemeritAToDemeritB.Value;
+                    int zz = (ke.DemeritC / Run.reduce.DemeritBToDemeritC.Value) / Run.reduce.DemeritAToDemeritB.Value;
 
                     ke.DemeritA = zz;
                     ke.DemeritB = yy;
@@ -589,15 +589,39 @@ namespace DailyPerformanceWarningModule
                 StudentIDList.Add(ke.ID);
             }
 
-            CustomRecord cr = new CustomRecord();
-            cr.Content = sb.ToString();
-            cr.Title = "懲戒預警系統";
-            cr.Type = Campus.Message.CrType.Type.Warning_Red;
-            cr.OtherMore = new IsViewForm_Open(sb.ToString(), _do, false);
+            if (_do._SaveOfShow.IsShow)
+            {
+                CustomRecord cr = new CustomRecord();
+                cr.Content = sb.ToString();
+                cr.Title = "懲戒預警系統";
+                cr.Type = Campus.Message.CrType.Type.Warning_Red;
+                cr.OtherMore = new IsViewForm_Open(sb.ToString(), _do, false);
 
-            MessageRobot.AddMessage(cr);
+                MessageRobot.AddMessage(cr);
+            }
 
             #endregion
         }
+    }
+
+    public class IsSaveOrShow
+    {
+        //主要是控制已經預警過的學生
+        //True : 要依據已經預警過的學生來判斷
+        //False: 進進行測試,所以不處理是否預警過的問題
+        /// <summary>
+        /// 使否為登入模式
+        /// </summary>
+        public bool IsSave { get; set; }
+
+        /// <summary>
+        /// 是否顯示右下方的彈出視窗
+        /// </summary>
+        public bool NowRun { get; set; }
+
+        /// <summary>
+        /// 是否顯示左下訊息視窗
+        /// </summary>
+        public bool IsShow { get; set; }
     }
 }
