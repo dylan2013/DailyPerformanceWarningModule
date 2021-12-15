@@ -52,6 +52,7 @@
             this.groupPanel2 = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.groupPanel1 = new DevComponents.DotNetBar.Controls.GroupPanel();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.groupPanel10.SuspendLayout();
             this.groupPanel9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.intSchoolYear1)).BeginInit();
@@ -258,7 +259,7 @@
             this.intSchoolYear1.ShowUpDown = true;
             this.intSchoolYear1.Size = new System.Drawing.Size(61, 25);
             this.intSchoolYear1.TabIndex = 2;
-            this.intSchoolYear1.Value = 102;
+            this.intSchoolYear1.Value = 110;
             // 
             // intSemester1
             // 
@@ -441,7 +442,7 @@
             // 
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel2.Location = new System.Drawing.Point(479, 222);
+            this.linkLabel2.Location = new System.Drawing.Point(487, 222);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(86, 17);
             this.linkLabel2.TabIndex = 21;
@@ -510,7 +511,7 @@
             this.textBoxX1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxX1.Size = new System.Drawing.Size(315, 239);
             this.textBoxX1.TabIndex = 17;
-            this.textBoxX1.Text = "親愛的家長您好\r\n貴子弟 已達「懲戒預警」標準\r\n請留意與檢視「缺曠資料」狀況\r\n課業問題，可立即向導師或主任反映與尋求協助\r\n如有釐清生涯志趣等疑惑，可由諮商中" +
+            this.textBoxX1.Text = "親愛的家長您好\r\n貴子弟 已達「缺曠預警」標準\r\n請留意與檢視「缺曠資料」狀況\r\n課業問題，可立即向導師或主任反映與尋求協助\r\n如有釐清生涯志趣等疑惑，可由諮商中" +
     "心幫忙\r\n學校許多資源，敬請多加利用\r\n\r\n本次預警條件如下：{{學年期}}\r\n「假別」包含「{{假別}}」\r\n「節次」累積達「{{節次}}」以上";
             // 
             // groupPanel1
@@ -560,11 +561,24 @@
             this.groupPanel1.TabIndex = 22;
             this.groupPanel1.Text = "設定";
             // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.BackColor = System.Drawing.Color.Transparent;
+            this.linkLabel3.Location = new System.Drawing.Point(617, 222);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(86, 17);
+            this.linkLabel3.TabIndex = 23;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "顯示功能變數";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
             // AttendanceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(737, 548);
+            this.Controls.Add(this.linkLabel3);
             this.Controls.Add(this.groupPanel1);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.groupPanel2);
@@ -617,5 +631,6 @@
         private DevComponents.DotNetBar.Controls.GroupPanel groupPanel2;
         private DevComponents.DotNetBar.Controls.TextBoxX textBoxX1;
         private DevComponents.DotNetBar.Controls.GroupPanel groupPanel1;
+        private System.Windows.Forms.LinkLabel linkLabel3;
     }
 }

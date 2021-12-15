@@ -1,5 +1,6 @@
 ﻿using Campus.Message;
 using FISCA;
+using FISCA.Authentication;
 using FISCA.Presentation;
 using FISCA.Presentation.Controls;
 using K12.BusinessLogic;
@@ -49,9 +50,17 @@ namespace DailyPerformanceWarningModule
             item["缺曠預警設定(推播)"].Size = RibbonBarButton.MenuButtonSize.Medium;
             item["缺曠預警設定(推播)"].Enable = Permissions.缺曠預警設定權限;
             item["缺曠預警設定(推播)"].Click += delegate
-            {
-                AttendanceForm con = new AttendanceForm();
-                con.ShowDialog();
+            {            
+                //必須要使用greening帳號登入才能用
+                if (DSAServices.AccountType == AccountType.Greening)
+                {
+                    AttendanceForm con = new AttendanceForm();
+                    con.ShowDialog();
+                }
+                else
+                {
+                    FISCA.Presentation.Controls.MsgBox.Show("必須是Greening帳號(如abc@gmail.com)");
+                }
             };
 
             item["懲戒預警設定(推播)"].Image = Properties.Resources.laws_info_64;
@@ -59,8 +68,16 @@ namespace DailyPerformanceWarningModule
             item["懲戒預警設定(推播)"].Enable = Permissions.懲戒預警設定權限;
             item["懲戒預警設定(推播)"].Click += delegate
             {
-                DemeritForm con = new DemeritForm();
-                con.ShowDialog();
+                //必須要使用greening帳號登入才能用
+                if (DSAServices.AccountType == AccountType.Greening)
+                {
+                    DemeritForm con = new DemeritForm();
+                    con.ShowDialog();
+                }
+                else
+                {
+                    FISCA.Presentation.Controls.MsgBox.Show("必須是Greening帳號(如abc@gmail.com)");
+                }
             };
 
 

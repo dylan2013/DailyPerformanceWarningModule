@@ -59,7 +59,9 @@ namespace DailyPerformanceWarningModule
         /// </summary>
         private void SetConfig()
         {
+            this.cbIsRun.CheckedChanged -= new System.EventHandler(this.cbIsRun_CheckedChanged);
             cbIsRun.Checked = Config.Run;
+            this.cbIsRun.CheckedChanged += new System.EventHandler(this.cbIsRun_CheckedChanged);
 
             intSchoolYear1.Value = Config.SchoolYear;
             intSemester1.Value = Config.Semester;
@@ -79,7 +81,7 @@ namespace DailyPerformanceWarningModule
 
             cbxIsMeritAndDemerit.Checked = Config.DemeritBalance;
 
-            textBoxX1.Text = Config.DemeritMessage.Replace("\n","\r\n");
+            textBoxX1.Text = Config.DemeritMessage.Replace("\n", "\r\n");
         }
 
         private void SaveConfig()
@@ -158,7 +160,7 @@ namespace DailyPerformanceWarningModule
             if (_do.DemeritList.Count > 0)
             {
                 Run.CompletedAtt(_do);
-                ViewDetail smessage = new ViewDetail(_do.DemeritList.Keys.ToList(), "懲戒預警通知", message);
+                ViewDetail smessage = new ViewDetail(_do, true, "懲戒預警通知", message);
                 DialogResult dr = smessage.ShowDialog();
 
                 if (dr == DialogResult.Yes)
@@ -181,11 +183,14 @@ namespace DailyPerformanceWarningModule
 
         private string SetText(string text)
         {
-            text = text.Replace("{{學年期}}", cbSingSchoolYear.Checked ? string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester) : "學年期「所有」");
+
+            text = text.Replace("{{學年期}}", cbSingSchoolYear.Checked ? string.Format("「{0}」學年度　第「{1}」學期", Config.SchoolYear, Config.Semester) : "「所有學期」");
+            text = text.Replace("{{學年度}}", "" + Config.SchoolYear);
+            text = text.Replace("{{學期}}", "" + Config.Semester);
             text = text.Replace("{{大過}}", "" + Config.DemeritA);
             text = text.Replace("{{小過}}", "" + Config.DemeritB);
             text = text.Replace("{{警告}}", "" + Config.DemeritC);
-            text = text.Replace("{{功過相抵}}", Config.ConfigDemeritBalance == "true" ? "是" : "否");
+            text = text.Replace("{{功過相抵}}", Config.DemeritBalance ? "是" : "否");
             return text;
         }
 
@@ -206,6 +211,21 @@ namespace DailyPerformanceWarningModule
 本次預警條件如下：{{學年期}}
 大過「{{大過}}」小過「{{小過}}」警告「{{警告}}」
 是否功過相抵「{{功過相抵}}」";
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string message = @"功能變數：　　　說明：
+{{學年期}}　　　「{0}」學年度 第「{1}」學期 or 「所有學期」
+{{學年度}}　　　110
+{{學期}}　　　　1 or 2
+{{大過}}　　　　1~999
+{{小過}}　　　　1~999
+{{警告}}　　　　1~999
+{{功過相抵}}　　是 or 否";
+
+            ShowFieldForm sff = new ShowFieldForm(message);
+            sff.ShowDialog();
         }
     }
 }

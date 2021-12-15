@@ -43,7 +43,7 @@
             this.groupPanel9 = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.intSchoolYear1 = new DevComponents.Editors.IntegerInput();
             this.intSemester1 = new DevComponents.Editors.IntegerInput();
-            this.checkBoxX3 = new DevComponents.DotNetBar.Controls.CheckBoxX();
+            this.cbAllSchoolYear = new DevComponents.DotNetBar.Controls.CheckBoxX();
             this.cbSingSchoolYear = new DevComponents.DotNetBar.Controls.CheckBoxX();
             this.lbSchoolYear1 = new DevComponents.DotNetBar.LabelX();
             this.lbSemester1 = new DevComponents.DotNetBar.LabelX();
@@ -56,6 +56,7 @@
             this.textBoxX1 = new DevComponents.DotNetBar.Controls.TextBoxX();
             this.groupPanel2 = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.groupPanel8.SuspendLayout();
             this.groupPanel6.SuspendLayout();
             this.groupPanel9.SuspendLayout();
@@ -214,7 +215,7 @@
             // 
             this.tbDemeritA.Border.Class = "TextBoxBorder";
             this.tbDemeritA.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.tbDemeritA.Location = new System.Drawing.Point(93, 10);
+            this.tbDemeritA.Location = new System.Drawing.Point(85, 23);
             this.tbDemeritA.Name = "tbDemeritA";
             this.tbDemeritA.Size = new System.Drawing.Size(37, 25);
             this.tbDemeritA.TabIndex = 1;
@@ -227,7 +228,7 @@
             // 
             this.tbDemeritB.Border.Class = "TextBoxBorder";
             this.tbDemeritB.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.tbDemeritB.Location = new System.Drawing.Point(188, 10);
+            this.tbDemeritB.Location = new System.Drawing.Point(180, 23);
             this.tbDemeritB.Name = "tbDemeritB";
             this.tbDemeritB.Size = new System.Drawing.Size(37, 25);
             this.tbDemeritB.TabIndex = 3;
@@ -240,7 +241,7 @@
             // 
             this.tbDemeritC.Border.Class = "TextBoxBorder";
             this.tbDemeritC.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.tbDemeritC.Location = new System.Drawing.Point(283, 10);
+            this.tbDemeritC.Location = new System.Drawing.Point(275, 23);
             this.tbDemeritC.Name = "tbDemeritC";
             this.tbDemeritC.Size = new System.Drawing.Size(37, 25);
             this.tbDemeritC.TabIndex = 5;
@@ -254,7 +255,7 @@
             // 
             this.lbDemeritB.BackgroundStyle.Class = "";
             this.lbDemeritB.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbDemeritB.Location = new System.Drawing.Point(142, 11);
+            this.lbDemeritB.Location = new System.Drawing.Point(134, 24);
             this.lbDemeritB.Name = "lbDemeritB";
             this.lbDemeritB.Size = new System.Drawing.Size(34, 23);
             this.lbDemeritB.TabIndex = 2;
@@ -268,7 +269,7 @@
             // 
             this.lbDemeritA.BackgroundStyle.Class = "";
             this.lbDemeritA.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbDemeritA.Location = new System.Drawing.Point(47, 11);
+            this.lbDemeritA.Location = new System.Drawing.Point(39, 24);
             this.lbDemeritA.Name = "lbDemeritA";
             this.lbDemeritA.Size = new System.Drawing.Size(34, 23);
             this.lbDemeritA.TabIndex = 0;
@@ -282,7 +283,7 @@
             // 
             this.lbDemeritC.BackgroundStyle.Class = "";
             this.lbDemeritC.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbDemeritC.Location = new System.Drawing.Point(237, 11);
+            this.lbDemeritC.Location = new System.Drawing.Point(229, 24);
             this.lbDemeritC.Name = "lbDemeritC";
             this.lbDemeritC.Size = new System.Drawing.Size(34, 23);
             this.lbDemeritC.TabIndex = 4;
@@ -309,7 +310,7 @@
             this.groupPanel9.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.Office2007;
             this.groupPanel9.Controls.Add(this.intSchoolYear1);
             this.groupPanel9.Controls.Add(this.intSemester1);
-            this.groupPanel9.Controls.Add(this.checkBoxX3);
+            this.groupPanel9.Controls.Add(this.cbAllSchoolYear);
             this.groupPanel9.Controls.Add(this.cbSingSchoolYear);
             this.groupPanel9.Controls.Add(this.lbSchoolYear1);
             this.groupPanel9.Controls.Add(this.lbSemester1);
@@ -364,7 +365,7 @@
             this.intSchoolYear1.ShowUpDown = true;
             this.intSchoolYear1.Size = new System.Drawing.Size(61, 25);
             this.intSchoolYear1.TabIndex = 2;
-            this.intSchoolYear1.Value = 90;
+            this.intSchoolYear1.Value = 110;
             // 
             // intSemester1
             // 
@@ -383,21 +384,21 @@
             this.intSemester1.TabIndex = 4;
             this.intSemester1.Value = 1;
             // 
-            // checkBoxX3
+            // cbAllSchoolYear
             // 
-            this.checkBoxX3.BackColor = System.Drawing.Color.Transparent;
+            this.cbAllSchoolYear.BackColor = System.Drawing.Color.Transparent;
             // 
             // 
             // 
-            this.checkBoxX3.BackgroundStyle.Class = "";
-            this.checkBoxX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.checkBoxX3.CheckBoxStyle = DevComponents.DotNetBar.eCheckBoxStyle.RadioButton;
-            this.checkBoxX3.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.checkBoxX3.Location = new System.Drawing.Point(22, 93);
-            this.checkBoxX3.Name = "checkBoxX3";
-            this.checkBoxX3.Size = new System.Drawing.Size(110, 23);
-            this.checkBoxX3.TabIndex = 5;
-            this.checkBoxX3.Text = "所有學期統計";
+            this.cbAllSchoolYear.BackgroundStyle.Class = "";
+            this.cbAllSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.cbAllSchoolYear.CheckBoxStyle = DevComponents.DotNetBar.eCheckBoxStyle.RadioButton;
+            this.cbAllSchoolYear.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.cbAllSchoolYear.Location = new System.Drawing.Point(22, 93);
+            this.cbAllSchoolYear.Name = "cbAllSchoolYear";
+            this.cbAllSchoolYear.Size = new System.Drawing.Size(110, 23);
+            this.cbAllSchoolYear.TabIndex = 5;
+            this.cbAllSchoolYear.Text = "所有學期統計";
             // 
             // cbSingSchoolYear
             // 
@@ -652,11 +653,24 @@
             this.linkLabel1.Text = "使用預設訊息";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked_1);
             // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.BackColor = System.Drawing.Color.Transparent;
+            this.linkLabel3.Location = new System.Drawing.Point(617, 230);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(86, 17);
+            this.linkLabel3.TabIndex = 24;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "顯示功能變數";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
             // DemeritForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 560);
+            this.Controls.Add(this.linkLabel3);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.groupPanel2);
             this.Controls.Add(this.groupPanel1);
@@ -702,7 +716,7 @@
         private DevComponents.DotNetBar.Controls.GroupPanel groupPanel9;
         private DevComponents.Editors.IntegerInput intSchoolYear1;
         private DevComponents.Editors.IntegerInput intSemester1;
-        private DevComponents.DotNetBar.Controls.CheckBoxX checkBoxX3;
+        private DevComponents.DotNetBar.Controls.CheckBoxX cbAllSchoolYear;
         private DevComponents.DotNetBar.Controls.CheckBoxX cbSingSchoolYear;
         private DevComponents.DotNetBar.LabelX lbSchoolYear1;
         private DevComponents.DotNetBar.LabelX lbSemester1;
@@ -715,5 +729,6 @@
         private DevComponents.DotNetBar.Controls.TextBoxX textBoxX1;
         private DevComponents.DotNetBar.Controls.GroupPanel groupPanel2;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel linkLabel3;
     }
 }

@@ -548,12 +548,13 @@ namespace DailyPerformanceWarningModule
             List<KeyBoStudent> rLint = _do.DemeritList.Values.ToList();
             rLint.Sort(tool.SortStudent);
 
-            foreach (KeyBoStudent ke in rLint)
+            foreach (KeyBoStudent student in rLint)
             {
+                //是否進行功過換算
                 if (DemConfig.DemeritBalance)
                 {
-                    int z = tool.GetBalance(ke.DemeritA, ke.DemeritB, ke.DemeritC, false);
-                    int y = tool.GetBalance(ke.MeritA, ke.MeritB, ke.MeritC, true);
+                    int z = tool.GetBalance(student.DemeritA, student.DemeritB, student.DemeritC, false);
+                    int y = tool.GetBalance(student.MeritA, student.MeritB, student.MeritC, true);
                     int x = z - y; //大於0表示懲戒狀態(功過換算)
 
                     //警告
@@ -563,30 +564,30 @@ namespace DailyPerformanceWarningModule
                     //大過
                     int zz = (x / Run.reduce.DemeritBToDemeritC.Value) / Run.reduce.DemeritAToDemeritB.Value;
 
-                    ke.DemeritA = zz;
-                    ke.DemeritB = yy;
-                    ke.DemeritC = xx;
+                    student.DemeritA = zz;
+                    student.DemeritB = yy;
+                    student.DemeritC = xx;
 
-                    sb.AppendLine(string.Format("班級「{0}」座號「{1}」學生「{2}」大過「{3}」小過「{4}」警告「{5}」", ke.ClassName, ke.SeatNo, ke.Name, ke.DemeritA, ke.DemeritB, ke.DemeritC));
+                    sb.AppendLine(string.Format("班級「{0}」座號「{1}」學生「{2}」大過「{3}」小過「{4}」警告「{5}」", student.ClassName, student.SeatNo, student.Name, student.DemeritA, student.DemeritB, student.DemeritC));
                 }
                 else
                 {
                     //警告
-                    int xx = ke.DemeritC % Run.reduce.DemeritBToDemeritC.Value;
+                    int xx = student.DemeritC;
                     //小過
-                    int yy = (ke.DemeritC / Run.reduce.DemeritBToDemeritC.Value) % Run.reduce.DemeritAToDemeritB.Value;
+                    int yy = student.DemeritB;
                     //大過
-                    int zz = (ke.DemeritC / Run.reduce.DemeritBToDemeritC.Value) / Run.reduce.DemeritAToDemeritB.Value;
+                    int zz = student.DemeritA ;
 
-                    ke.DemeritA = zz;
-                    ke.DemeritB = yy;
-                    ke.DemeritC = xx;
+                    student.DemeritA = zz;
+                    student.DemeritB = yy;
+                    student.DemeritC = xx;
 
-                    sb.AppendLine(string.Format("班級「{0}」座號「{1}」學生「{2}」大過「{3}」小過「{4}」警告「{5}」", ke.ClassName, ke.SeatNo, ke.Name, ke.DemeritA, ke.DemeritB, ke.DemeritC));
+                    sb.AppendLine(string.Format("班級「{0}」座號「{1}」學生「{2}」大過「{3}」小過「{4}」警告「{5}」", student.ClassName, student.SeatNo, student.Name, student.DemeritA, student.DemeritB, student.DemeritC));
 
                 }
 
-                StudentIDList.Add(ke.ID);
+                StudentIDList.Add(student.ID);
             }
 
             if (_do._SaveOfShow.IsShow)

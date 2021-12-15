@@ -13,30 +13,51 @@ namespace DailyPerformanceWarningModule
 {
     public partial class ViewDetail : BaseForm
     {
-        List<string> _IDList;
+        DoWorkObj _do;
         string _title;
         string _message;
         FISCA.Data.QueryHelper _q = new FISCA.Data.QueryHelper();
-
+        List<string> _IDList = new List<string>();
         BackgroundWorker bgw = new BackgroundWorker();
 
-        public ViewDetail(List<string> IDList, string title, string message)
+        /// <summary>
+        /// mode = True懲戒
+        /// mode = False缺曠
+        /// </summary>
+        public ViewDetail(DoWorkObj ddo, bool mode, string title, string message)
         {
             InitializeComponent();
-            _IDList = IDList;
+            _do = ddo;
             _message = message;
             tbTitle.Text = title;
             textBoxX1.Text = _message.Replace("<br>", "\r\n");
 
             //建立資料
+            List<KeyBoStudent> keyBoList = new List<KeyBoStudent>();
+            if (mode)
+            {
+                keyBoList = _do.DemeritList.Values.ToList();
+            }
+            else
+            {
+                keyBoList = _do.AttendanceList.Values.ToList();
+            }
 
-            DataTable dt = _q.Select(string.Format("select id,name from student where id in('{0}')", string.Join("','", IDList)));
-            foreach (DataRow dRow in dt.Rows)
+            foreach (KeyBoStudent each in keyBoList)
             {
                 DataGridViewRow gRow = new DataGridViewRow();
                 gRow.CreateCells(dataGridViewX1);
-                gRow.Cells[0].Value = "" + dRow["id"];
-                gRow.Cells[1].Value = "" + dRow["name"];
+                gRow.Cells[0].Value = each.ID;
+                gRow.Cells[1].Value = each.ClassName;
+                gRow.Cells[2].Value = each.SeatNo;
+                gRow.Cells[3].Value = each.StudentNumber;
+                gRow.Cells[4].Value = each.Name;
+
+                if (mode)
+                    gRow.Cells[5].Value = string.Format("大過「{0}」小過「{1}」警告「{2}」", each.DemeritA, each.DemeritB, each.DemeritC); //統計支數
+                else
+                    gRow.Cells[5].Value = string.Format("缺曠「{0}」", each.AttendanceCount); //統計支數
+
                 dataGridViewX1.Rows.Add(gRow);
             }
 
@@ -53,7 +74,7 @@ namespace DailyPerformanceWarningModule
                 {
                     _title = tbTitle.Text;
                     _message = textBoxX1.Text.Replace("\r\n", "</br>");
-                    _IDList.Clear();
+
                     foreach (DataGridViewRow row in dataGridViewX1.Rows)
                     {
                         string id = "" + row.Cells[0].Value;

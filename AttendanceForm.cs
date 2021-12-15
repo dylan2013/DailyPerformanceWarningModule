@@ -59,7 +59,9 @@ namespace DailyPerformanceWarningModule
         /// </summary>
         private void SetConfig()
         {
+            this.cbIsRun.CheckedChanged -= new System.EventHandler(this.cbIsRun_CheckedChanged);
             cbIsRun.Checked = Config.Run;
+            this.cbIsRun.CheckedChanged += new System.EventHandler(this.cbIsRun_CheckedChanged);
 
             intSchoolYear1.Value = Config.SchoolYear;
             intSemester1.Value = Config.Semester;
@@ -75,7 +77,7 @@ namespace DailyPerformanceWarningModule
 
 
 
-            txtPeriodCount.Text = Config.AttenanceCount.ToString();
+            txtPeriodCount.Text = "" + Config.AttenanceCount;
 
             foreach (K12.Data.AbsenceMappingInfo info in K12.Data.AbsenceMapping.SelectAll())
             {
@@ -177,7 +179,7 @@ namespace DailyPerformanceWarningModule
 
             if (_do.AttendanceList.Count > 0)
             {
-                ViewDetail smessage = new ViewDetail(_do.AttendanceList.Keys.ToList(), "缺曠預警通知", message);
+                ViewDetail smessage = new ViewDetail(_do, false, "缺曠預警通知", message);
                 DialogResult dr = smessage.ShowDialog();
                 if (dr == DialogResult.Yes)
                 {
@@ -199,9 +201,11 @@ namespace DailyPerformanceWarningModule
 
         private string SetText(string text)
         {
-            text = text.Replace("{{學年期}}", cbSingSchoolYear.Checked ? string.Format("學年度「{0}」學期「{1}」", Config.SchoolYear, Config.Semester) : "學年期「所有」");
+            text = text.Replace("{{學年期}}", cbSingSchoolYear.Checked ? string.Format("「{0}」學年度 第「{1}」學期", Config.SchoolYear, Config.Semester) : "「所有學期」");
+            text = text.Replace("{{學年度}}", "" + Config.SchoolYear);
+            text = text.Replace("{{學期}}", "" + Config.Semester);
             text = text.Replace("{{節次}}", "" + Config.AttenanceCount);
-            text = text.Replace("{{假別}}", "" + string.Join(",",Config.AttendanceList));
+            text = text.Replace("{{假別}}", "" + string.Join("，", Config.AttendanceList));
             return text;
         }
 
@@ -221,7 +225,20 @@ namespace DailyPerformanceWarningModule
 
 本次預警條件如下：{{學年期}}
 「假別」包含「{{假別}}」
-「節次」累積達「{{節次}}」以上";
+「缺曠」累積達「{{節次}}」節次以上";
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string message = @"功能變數：　　　說明：
+{{學年期}}　　　「{0}」學年度 第「{1}」學期 or 「所有學期」
+{{學年度}}　　　110
+{{學期}}　　　　1 or 2
+{{節次}}　　　　1~999
+{{假別}}　　　　曠課，缺課";
+
+            ShowFieldForm sff = new ShowFieldForm(message);
+            sff.ShowDialog();
         }
     }
 

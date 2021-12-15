@@ -152,6 +152,12 @@
     </Compile>
     <Compile Include="KeyBoStudent.cs" />
     <Compile Include="Message\SendMessage.cs" />
+    <Compile Include="Message\ShowFieldForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Message\ShowFieldForm.Designer.cs">
+      <DependentUpon>ShowFieldForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Message\Utility.cs" />
     <Compile Include="Permissions.cs" />
     <Compile Include="Program.cs" />
@@ -190,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="IsViewForm_Open.resx">
       <DependentUpon>IsViewForm_Open.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Message\ShowFieldForm.resx">
+      <DependentUpon>ShowFieldForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
