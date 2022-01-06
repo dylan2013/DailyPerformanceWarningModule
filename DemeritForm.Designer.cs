@@ -71,7 +71,7 @@
             this.linkLabel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabel2.AutoSize = true;
             this.linkLabel2.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel2.Location = new System.Drawing.Point(9, 531);
+            this.linkLabel2.Location = new System.Drawing.Point(16, 505);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(73, 17);
             this.linkLabel2.TabIndex = 3;
@@ -88,9 +88,9 @@
             this.groupPanel8.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.Office2007;
             this.groupPanel8.Controls.Add(this.cbxIsMeritAndDemerit);
             this.groupPanel8.Controls.Add(this.lbHelper1);
-            this.groupPanel8.Location = new System.Drawing.Point(10, 296);
+            this.groupPanel8.Location = new System.Drawing.Point(8, 337);
             this.groupPanel8.Name = "groupPanel8";
-            this.groupPanel8.Size = new System.Drawing.Size(357, 216);
+            this.groupPanel8.Size = new System.Drawing.Size(366, 149);
             // 
             // 
             // 
@@ -138,7 +138,7 @@
             this.cbxIsMeritAndDemerit.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbxIsMeritAndDemerit.CheckValue = "Y";
             this.cbxIsMeritAndDemerit.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(66)))), ((int)(((byte)(133)))));
-            this.cbxIsMeritAndDemerit.Location = new System.Drawing.Point(47, 17);
+            this.cbxIsMeritAndDemerit.Location = new System.Drawing.Point(52, 31);
             this.cbxIsMeritAndDemerit.Name = "cbxIsMeritAndDemerit";
             this.cbxIsMeritAndDemerit.Size = new System.Drawing.Size(107, 21);
             this.cbxIsMeritAndDemerit.TabIndex = 0;
@@ -154,7 +154,7 @@
             this.lbHelper1.BackgroundStyle.Class = "";
             this.lbHelper1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.lbHelper1.Font = new System.Drawing.Font("微軟正黑體", 9.75F);
-            this.lbHelper1.Location = new System.Drawing.Point(76, 40);
+            this.lbHelper1.Location = new System.Drawing.Point(76, 54);
             this.lbHelper1.Name = "lbHelper1";
             this.lbHelper1.Size = new System.Drawing.Size(232, 38);
             this.lbHelper1.TabIndex = 1;
@@ -172,9 +172,9 @@
             this.groupPanel6.Controls.Add(this.lbDemeritB);
             this.groupPanel6.Controls.Add(this.lbDemeritA);
             this.groupPanel6.Controls.Add(this.lbDemeritC);
-            this.groupPanel6.Location = new System.Drawing.Point(10, 193);
+            this.groupPanel6.Location = new System.Drawing.Point(8, 230);
             this.groupPanel6.Name = "groupPanel6";
-            this.groupPanel6.Size = new System.Drawing.Size(357, 97);
+            this.groupPanel6.Size = new System.Drawing.Size(366, 97);
             // 
             // 
             // 
@@ -296,7 +296,7 @@
             this.btnExit.AutoSize = true;
             this.btnExit.BackColor = System.Drawing.Color.Transparent;
             this.btnExit.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnExit.Location = new System.Drawing.Point(647, 523);
+            this.btnExit.Location = new System.Drawing.Point(646, 500);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(75, 25);
             this.btnExit.TabIndex = 5;
@@ -314,9 +314,9 @@
             this.groupPanel9.Controls.Add(this.cbSingSchoolYear);
             this.groupPanel9.Controls.Add(this.lbSchoolYear1);
             this.groupPanel9.Controls.Add(this.lbSemester1);
-            this.groupPanel9.Location = new System.Drawing.Point(12, 12);
+            this.groupPanel9.Location = new System.Drawing.Point(10, 12);
             this.groupPanel9.Name = "groupPanel9";
-            this.groupPanel9.Size = new System.Drawing.Size(355, 156);
+            this.groupPanel9.Size = new System.Drawing.Size(364, 205);
             // 
             // 
             // 
@@ -358,7 +358,7 @@
             this.intSchoolYear1.BackgroundStyle.Class = "DateTimeInputBackground";
             this.intSchoolYear1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.intSchoolYear1.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2;
-            this.intSchoolYear1.Location = new System.Drawing.Point(122, 51);
+            this.intSchoolYear1.Location = new System.Drawing.Point(123, 60);
             this.intSchoolYear1.MaxValue = 999;
             this.intSchoolYear1.MinValue = 90;
             this.intSchoolYear1.Name = "intSchoolYear1";
@@ -375,7 +375,7 @@
             this.intSemester1.BackgroundStyle.Class = "DateTimeInputBackground";
             this.intSemester1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.intSemester1.ButtonFreeText.Shortcut = DevComponents.DotNetBar.eShortcut.F2;
-            this.intSemester1.Location = new System.Drawing.Point(241, 51);
+            this.intSemester1.Location = new System.Drawing.Point(242, 60);
             this.intSemester1.MaxValue = 2;
             this.intSemester1.MinValue = 1;
             this.intSemester1.Name = "intSemester1";
@@ -394,7 +394,7 @@
             this.cbAllSchoolYear.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.cbAllSchoolYear.CheckBoxStyle = DevComponents.DotNetBar.eCheckBoxStyle.RadioButton;
             this.cbAllSchoolYear.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cbAllSchoolYear.Location = new System.Drawing.Point(22, 93);
+            this.cbAllSchoolYear.Location = new System.Drawing.Point(23, 123);
             this.cbAllSchoolYear.Name = "cbAllSchoolYear";
             this.cbAllSchoolYear.Size = new System.Drawing.Size(110, 23);
             this.cbAllSchoolYear.TabIndex = 5;
@@ -413,7 +413,7 @@
             this.cbSingSchoolYear.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbSingSchoolYear.CheckValue = "Y";
             this.cbSingSchoolYear.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.cbSingSchoolYear.Location = new System.Drawing.Point(22, 13);
+            this.cbSingSchoolYear.Location = new System.Drawing.Point(23, 27);
             this.cbSingSchoolYear.Name = "cbSingSchoolYear";
             this.cbSingSchoolYear.Size = new System.Drawing.Size(110, 23);
             this.cbSingSchoolYear.TabIndex = 0;
@@ -428,7 +428,7 @@
             // 
             this.lbSchoolYear1.BackgroundStyle.Class = "";
             this.lbSchoolYear1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbSchoolYear1.Location = new System.Drawing.Point(63, 53);
+            this.lbSchoolYear1.Location = new System.Drawing.Point(64, 62);
             this.lbSchoolYear1.Name = "lbSchoolYear1";
             this.lbSchoolYear1.Size = new System.Drawing.Size(47, 21);
             this.lbSchoolYear1.TabIndex = 1;
@@ -443,7 +443,7 @@
             // 
             this.lbSemester1.BackgroundStyle.Class = "";
             this.lbSemester1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lbSemester1.Location = new System.Drawing.Point(195, 53);
+            this.lbSemester1.Location = new System.Drawing.Point(196, 62);
             this.lbSemester1.Name = "lbSemester1";
             this.lbSemester1.Size = new System.Drawing.Size(34, 21);
             this.lbSemester1.TabIndex = 3;
@@ -459,11 +459,11 @@
             this.labelX3.BackgroundStyle.Class = "";
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX3.ForeColor = System.Drawing.Color.Red;
-            this.labelX3.Location = new System.Drawing.Point(36, 38);
+            this.labelX3.Location = new System.Drawing.Point(47, 27);
             this.labelX3.Name = "labelX3";
-            this.labelX3.Size = new System.Drawing.Size(261, 39);
+            this.labelX3.Size = new System.Drawing.Size(261, 56);
             this.labelX3.TabIndex = 8;
-            this.labelX3.Text = "勾選本選項,系統將於登入時\r\n依據條件內容顯示符合預警設定之學生清單";
+            this.labelX3.Text = "勾選本選項,系統將於登入時\r\n依據條件內容顯示符合預警設定之學生清單\r\n(有本功能權限的使用者,進行顯示)";
             // 
             // cbIsRun
             // 
@@ -474,7 +474,7 @@
             // 
             this.cbIsRun.BackgroundStyle.Class = "";
             this.cbIsRun.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.cbIsRun.Location = new System.Drawing.Point(16, 13);
+            this.cbIsRun.Location = new System.Drawing.Point(27, 7);
             this.cbIsRun.Name = "cbIsRun";
             this.cbIsRun.Size = new System.Drawing.Size(134, 21);
             this.cbIsRun.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -492,7 +492,7 @@
             // 
             this.labelX4.BackgroundStyle.Class = "";
             this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX4.Location = new System.Drawing.Point(36, 112);
+            this.labelX4.Location = new System.Drawing.Point(47, 108);
             this.labelX4.Name = "labelX4";
             this.labelX4.Size = new System.Drawing.Size(261, 56);
             this.labelX4.TabIndex = 14;
@@ -507,7 +507,7 @@
             // 
             this.cbStatistics.BackgroundStyle.Class = "";
             this.cbStatistics.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.cbStatistics.Location = new System.Drawing.Point(16, 83);
+            this.cbStatistics.Location = new System.Drawing.Point(27, 88);
             this.cbStatistics.Name = "cbStatistics";
             this.cbStatistics.Size = new System.Drawing.Size(241, 21);
             this.cbStatistics.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -521,7 +521,7 @@
             this.btnSendMessage.BackColor = System.Drawing.Color.Transparent;
             this.btnSendMessage.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
             this.btnSendMessage.ForeColor = System.Drawing.Color.Red;
-            this.btnSendMessage.Location = new System.Drawing.Point(485, 523);
+            this.btnSendMessage.Location = new System.Drawing.Point(484, 500);
             this.btnSendMessage.Name = "btnSendMessage";
             this.btnSendMessage.Size = new System.Drawing.Size(156, 25);
             this.btnSendMessage.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -540,9 +540,9 @@
             this.groupPanel1.Controls.Add(this.labelX3);
             this.groupPanel1.Controls.Add(this.labelX4);
             this.groupPanel1.Controls.Add(this.cbStatistics);
-            this.groupPanel1.Location = new System.Drawing.Point(381, 12);
+            this.groupPanel1.Location = new System.Drawing.Point(385, 12);
             this.groupPanel1.Name = "groupPanel1";
-            this.groupPanel1.Size = new System.Drawing.Size(341, 205);
+            this.groupPanel1.Size = new System.Drawing.Size(336, 205);
             // 
             // 
             // 
@@ -590,7 +590,7 @@
             this.textBoxX1.Multiline = true;
             this.textBoxX1.Name = "textBoxX1";
             this.textBoxX1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxX1.Size = new System.Drawing.Size(325, 240);
+            this.textBoxX1.Size = new System.Drawing.Size(320, 214);
             this.textBoxX1.TabIndex = 17;
             this.textBoxX1.Text = "親愛的家長您好\r\n貴子弟 已達「懲戒預警」標準\r\n請留意與檢視「懲戒資料」狀況\r\n課業問題，可立即向導師或主任反映與尋求協助\r\n如有釐清生涯志趣等疑惑，可由諮商中" +
     "心幫忙\r\n學校許多資源，敬請多加利用\r\n\r\n本次預警條件如下：{{學年期}}\r\n大過「{{大過}}」小過「{{小過}}」警告「{{警告}}」\r\n是否功過相抵「{" +
@@ -605,9 +605,9 @@
             this.groupPanel2.CanvasColor = System.Drawing.SystemColors.Control;
             this.groupPanel2.ColorSchemeStyle = DevComponents.DotNetBar.eDotNetBarStyle.Office2007;
             this.groupPanel2.Controls.Add(this.textBoxX1);
-            this.groupPanel2.Location = new System.Drawing.Point(376, 227);
+            this.groupPanel2.Location = new System.Drawing.Point(380, 227);
             this.groupPanel2.Name = "groupPanel2";
-            this.groupPanel2.Size = new System.Drawing.Size(346, 285);
+            this.groupPanel2.Size = new System.Drawing.Size(341, 259);
             // 
             // 
             // 
@@ -645,7 +645,7 @@
             // 
             this.linkLabel1.AutoSize = true;
             this.linkLabel1.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel1.Location = new System.Drawing.Point(469, 230);
+            this.linkLabel1.Location = new System.Drawing.Point(476, 230);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(86, 17);
             this.linkLabel1.TabIndex = 19;
@@ -657,7 +657,7 @@
             // 
             this.linkLabel3.AutoSize = true;
             this.linkLabel3.BackColor = System.Drawing.Color.Transparent;
-            this.linkLabel3.Location = new System.Drawing.Point(617, 230);
+            this.linkLabel3.Location = new System.Drawing.Point(608, 230);
             this.linkLabel3.Name = "linkLabel3";
             this.linkLabel3.Size = new System.Drawing.Size(86, 17);
             this.linkLabel3.TabIndex = 24;
@@ -669,7 +669,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(754, 560);
+            this.ClientSize = new System.Drawing.Size(733, 534);
             this.Controls.Add(this.linkLabel3);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.groupPanel2);

@@ -367,7 +367,7 @@
             // 
             this.cbIsRun.BackgroundStyle.Class = "";
             this.cbIsRun.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.cbIsRun.Location = new System.Drawing.Point(16, 12);
+            this.cbIsRun.Location = new System.Drawing.Point(25, 7);
             this.cbIsRun.Name = "cbIsRun";
             this.cbIsRun.Size = new System.Drawing.Size(134, 21);
             this.cbIsRun.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -386,11 +386,11 @@
             this.labelX3.BackgroundStyle.Class = "";
             this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
             this.labelX3.ForeColor = System.Drawing.Color.Red;
-            this.labelX3.Location = new System.Drawing.Point(34, 38);
+            this.labelX3.Location = new System.Drawing.Point(43, 28);
             this.labelX3.Name = "labelX3";
-            this.labelX3.Size = new System.Drawing.Size(261, 39);
+            this.labelX3.Size = new System.Drawing.Size(261, 56);
             this.labelX3.TabIndex = 6;
-            this.labelX3.Text = "勾選本選項,系統將於登入時\r\n依據條件內容顯示符合預警設定之學生清單";
+            this.labelX3.Text = "勾選本選項,系統將於登入時\r\n依據條件內容顯示符合預警設定之學生清單\r\n(有本功能權限的使用者,進行顯示)";
             // 
             // cbStatistics
             // 
@@ -401,7 +401,7 @@
             // 
             this.cbStatistics.BackgroundStyle.Class = "";
             this.cbStatistics.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.cbStatistics.Location = new System.Drawing.Point(16, 87);
+            this.cbStatistics.Location = new System.Drawing.Point(25, 90);
             this.cbStatistics.Name = "cbStatistics";
             this.cbStatistics.Size = new System.Drawing.Size(241, 21);
             this.cbStatistics.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
@@ -417,7 +417,7 @@
             // 
             this.labelX4.BackgroundStyle.Class = "";
             this.labelX4.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX4.Location = new System.Drawing.Point(35, 112);
+            this.labelX4.Location = new System.Drawing.Point(44, 111);
             this.labelX4.Name = "labelX4";
             this.labelX4.Size = new System.Drawing.Size(261, 56);
             this.labelX4.TabIndex = 12;
@@ -590,7 +590,7 @@
             this.DoubleBuffered = true;
             this.MaximizeBox = true;
             this.Name = "AttendanceForm";
-            this.Text = "缺曠警示設定";
+            this.Text = "缺曠預警設定";
             this.groupPanel10.ResumeLayout(false);
             this.groupPanel10.PerformLayout();
             this.groupPanel9.ResumeLayout(false);
