@@ -1,4 +1,5 @@
-﻿using FISCA.Presentation.Controls;
+﻿using FISCA.Authentication;
+using FISCA.Presentation.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -148,27 +149,34 @@ namespace DailyPerformanceWarningModule
 
         private void btnSendMessage_Click(object sender, EventArgs e)
         {
-            btnSendMessage.Enabled = false;
-            btnSendMessage.Text = "推播(開始發送作業)";
-            Run.BGW_Att.RunWorkerCompleted += BGW_Att_RunWorkerCompleted;
-            if (!Run.BGW_Att.IsBusy)
+            if (DSAServices.AccountType == AccountType.Greening)
             {
-                FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
+                btnSendMessage.Enabled = false;
+                btnSendMessage.Text = "推播(開始發送作業)";
+                Run.BGW_Att.RunWorkerCompleted += BGW_Att_RunWorkerCompleted;
+                if (!Run.BGW_Att.IsBusy)
+                {
+                    FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
 
-                SaveConfig();
+                    SaveConfig();
 
-                FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
+                    FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
 
-                IsSaveOrShow show = new IsSaveOrShow();
-                show.IsSave = cbStatistics.Checked; //控制已經預警過的學生
-                show.NowRun = true; //立即執行
-                show.IsShow = false;
-                Run.BGW_Att.RunWorkerAsync(show);
+                    IsSaveOrShow show = new IsSaveOrShow();
+                    show.IsSave = cbStatistics.Checked; //控制已經預警過的學生
+                    show.NowRun = true; //立即執行
+                    show.IsShow = false;
+                    Run.BGW_Att.RunWorkerAsync(show);
+                }
+                else
+                {
+                    btnSendMessage.Enabled = true;
+                    MsgBox.Show("系統忙碌中請稍後再試!!");
+                }
             }
             else
             {
-                btnSendMessage.Enabled = true;
-                MsgBox.Show("系統忙碌中請稍後再試!!");
+                FISCA.Presentation.Controls.MsgBox.Show("必須是Greening帳號(如abc@gmail.com)");
             }
         }
 

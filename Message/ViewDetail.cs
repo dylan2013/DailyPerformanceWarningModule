@@ -67,31 +67,39 @@ namespace DailyPerformanceWarningModule
 
         private void btnSendMessage_Click(object sender, EventArgs e)
         {
-            if (textBoxX1.Text != "")
+            if (dataGridViewX1.Rows.Count > 0)
             {
-                btnSendMessage.Enabled = false;
-                if (!bgw.IsBusy)
+                if (textBoxX1.Text != "")
                 {
-                    _title = tbTitle.Text;
-                    _message = textBoxX1.Text.Replace("\r\n", "</br>");
-
-                    foreach (DataGridViewRow row in dataGridViewX1.Rows)
+                    btnSendMessage.Enabled = false;
+                    if (!bgw.IsBusy)
                     {
-                        string id = "" + row.Cells[0].Value;
-                        _IDList.Add(id);
-                    }
+                        _title = tbTitle.Text;
+                        _message = textBoxX1.Text.Replace("\r\n", "</br>");
 
-                    bgw.RunWorkerAsync();
+                        foreach (DataGridViewRow row in dataGridViewX1.Rows)
+                        {
+                            string id = "" + row.Cells[0].Value;
+                            _IDList.Add(id);
+                        }
+
+                        bgw.RunWorkerAsync();
+                    }
+                    else
+                    {
+                        MsgBox.Show("系統忙錄中\n請稍後試再試");
+                    }
                 }
                 else
                 {
-                    MsgBox.Show("系統忙錄中\n請稍後試再試");
+                    MsgBox.Show("請輸入推播內容!");
                 }
             }
             else
             {
-                MsgBox.Show("請輸入推播內容!");
+                MsgBox.Show("清單中無可以發送的學生");
             }
+
 
         }
 
