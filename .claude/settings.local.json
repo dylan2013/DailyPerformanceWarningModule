@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"C:\\\\MyJob_Desktop\\\\Github\\\\DailyPerformanceWarningModule\\\\DailyPerformanceWarningModule.csproj\" /t:Build /p:Configuration=Debug /nologo /v:minimal /clp:ErrorsOnly)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"C:\\\\MyJob_Desktop\\\\Github\\\\DailyPerformanceWarningModule\\\\DailyPerformanceWarningModule.csproj\" /t:Build /p:Configuration=Debug /nologo /v:minimal; \"ExitCode=$LASTEXITCODE\")",
+      "PowerShell($asm = [Reflection.Assembly]::LoadFile\\(\"C:\\\\MyJob_Desktop\\\\Github\\\\DailyPerformanceWarningModule\\\\Library\\\\K12.Data.dll\"\\); $t = $asm.GetType\\(\"K12.Data.PeriodMappingInfo\"\\); \"Type: $t\"; $t.GetProperties\\(\\) | ForEach-Object { \"{0}  {1}\" -f $_.PropertyType.Name, $_.Name })"
+    ]
+  }
+}

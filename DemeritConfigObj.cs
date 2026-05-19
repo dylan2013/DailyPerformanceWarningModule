@@ -28,6 +28,10 @@ namespace DailyPerformanceWarningModule
         public string ConfigDemeritBalance = "是否進行功過相抵";
         public string ConfigMessage = "懲戒預警訊息";
 
+        public string Config_DateMode = "判斷模式";
+        public string Config_StartDate = "起始日期";
+        public string Config_EndDate = "結束日期";
+
 
         /// <summary>
         /// 設定檔
@@ -85,6 +89,21 @@ namespace DailyPerformanceWarningModule
         public string DemeritMessage { get; set; }
 
         /// <summary>
+        /// 判斷模式:學期 / 所有 / 日期(沿用 AttendanceConfigObj.Mode_*)
+        /// </summary>
+        public string DateMode { get; set; }
+
+        /// <summary>
+        /// 依日期判斷-起始日期
+        /// </summary>
+        public DateTime StartDate { get; set; }
+
+        /// <summary>
+        /// 依日期判斷-結束日期
+        /// </summary>
+        public DateTime EndDate { get; set; }
+
+        /// <summary>
         /// 取得目前設定內容
         /// </summary>
         public void GetConfig()
@@ -102,6 +121,24 @@ namespace DailyPerformanceWarningModule
                 SingOrAll = tool.ParseBool(cd[Config_IsSingOrAll]);
             else
                 SingOrAll = true;
+
+            //判斷模式(舊設定檔相容:無此鍵時由 SingOrAll 推導)
+            if (!string.IsNullOrEmpty(cd[Config_DateMode]))
+                DateMode = cd[Config_DateMode];
+            else
+                DateMode = SingOrAll ? AttendanceConfigObj.Mode_Sem : AttendanceConfigObj.Mode_All;
+
+            //依日期判斷-起迄日期
+            DateTime _d;
+            if (DateTime.TryParse(cd[Config_StartDate], out _d))
+                StartDate = _d.Date;
+            else
+                StartDate = DateTime.Today;
+
+            if (DateTime.TryParse(cd[Config_EndDate], out _d))
+                EndDate = _d.Date;
+            else
+                EndDate = DateTime.Today;
 
             //是否統計改變的學生才顯示
             if (!string.IsNullOrEmpty(cd[Config_StatisticsChange]))
@@ -144,6 +181,9 @@ namespace DailyPerformanceWarningModule
         {
             cd[Config_RunDemerit] = Run.ToString();
             cd[Config_IsSingOrAll] = SingOrAll.ToString();
+            cd[Config_DateMode] = DateMode;
+            cd[Config_StartDate] = StartDate.ToString("yyyy/MM/dd");
+            cd[Config_EndDate] = EndDate.ToString("yyyy/MM/dd");
             cd[Config_StatisticsChange] = StatisticsChange.ToString();
             cd[Config_SchoolYear] = SchoolYear.ToString();
             cd[Config_Semester] = Semester.ToString();

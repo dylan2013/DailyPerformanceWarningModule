@@ -20,6 +20,7 @@ namespace DailyPerformanceWarningModule
 
         public string Config_RunAttendance = "是否執行缺曠預警";
         public string Config_StatisticsChange = "是否統計改變的學生才顯示";
+        public string Config_ByCoursePeriod = "依據對應課程節次設定判斷";
         public string Config_IsSingOrAll = "單學期或所有學期";
         public string Config_SchoolYear = "學年度";
         public string Config_Semester = "學期";
@@ -27,6 +28,17 @@ namespace DailyPerformanceWarningModule
         public string Config_AttendanceName = "累積缺曠名稱";
 
         public string Config_AttendanceMessage = "缺曠預警訊息";
+
+        public string Config_DateMode = "判斷模式";
+        public string Config_StartDate = "起始日期";
+        public string Config_EndDate = "結束日期";
+
+        /// <summary>依學期判斷</summary>
+        public const string Mode_Sem = "學期";
+        /// <summary>所有學期統計</summary>
+        public const string Mode_All = "所有";
+        /// <summary>依日期判斷</summary>
+        public const string Mode_Date = "日期";
 
         /// <summary>
         /// 設定檔
@@ -66,9 +78,29 @@ namespace DailyPerformanceWarningModule
         public bool StatisticsChange { get; set; }
 
         /// <summary>
+        /// 是否依據『對應課程節次』設定判斷(功能待補)
+        /// </summary>
+        public bool ByCoursePeriod { get; set; }
+
+        /// <summary>
         /// 缺曠預警訊息
         /// </summary>
         public string AttendanceMessage { get; set; }
+
+        /// <summary>
+        /// 判斷模式:學期 / 所有 / 日期
+        /// </summary>
+        public string DateMode { get; set; }
+
+        /// <summary>
+        /// 依日期判斷-起始日期
+        /// </summary>
+        public DateTime StartDate { get; set; }
+
+        /// <summary>
+        /// 依日期判斷-結束日期
+        /// </summary>
+        public DateTime EndDate { get; set; }
 
         /// <summary>
         /// 取得目前設定內容
@@ -89,11 +121,35 @@ namespace DailyPerformanceWarningModule
             else
                 SingOrAll = true;
 
+            //判斷模式(舊設定檔相容:無此鍵時由 SingOrAll 推導)
+            if (!string.IsNullOrEmpty(cd[Config_DateMode]))
+                DateMode = cd[Config_DateMode];
+            else
+                DateMode = SingOrAll ? Mode_Sem : Mode_All;
+
+            //依日期判斷-起迄日期
+            DateTime _d;
+            if (DateTime.TryParse(cd[Config_StartDate], out _d))
+                StartDate = _d.Date;
+            else
+                StartDate = DateTime.Today;
+
+            if (DateTime.TryParse(cd[Config_EndDate], out _d))
+                EndDate = _d.Date;
+            else
+                EndDate = DateTime.Today;
+
             //是否統計改變的學生才顯示
             if (!string.IsNullOrEmpty(cd[Config_StatisticsChange]))
                  StatisticsChange = tool.ParseBool(cd[Config_StatisticsChange]);
             else
                  StatisticsChange = false;
+
+            //是否依據『對應課程節次』設定判斷
+            if (!string.IsNullOrEmpty(cd[Config_ByCoursePeriod]))
+                ByCoursePeriod = tool.ParseBool(cd[Config_ByCoursePeriod]);
+            else
+                ByCoursePeriod = false;
 
             //學年度
             if (!string.IsNullOrEmpty(cd[Config_SchoolYear]))
@@ -132,7 +188,11 @@ namespace DailyPerformanceWarningModule
         {
             cd[Config_RunAttendance] = Run.ToString();
             cd[Config_IsSingOrAll] = SingOrAll.ToString();
+            cd[Config_DateMode] = DateMode;
+            cd[Config_StartDate] = StartDate.ToString("yyyy/MM/dd");
+            cd[Config_EndDate] = EndDate.ToString("yyyy/MM/dd");
             cd[Config_StatisticsChange] = StatisticsChange.ToString();
+            cd[Config_ByCoursePeriod] = ByCoursePeriod.ToString();
             cd[Config_SchoolYear] = SchoolYear.ToString();
             cd[Config_Semester] = Semester.ToString();
             cd[Config_AttendanceCount] = AttenanceCount.ToString();

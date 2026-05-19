@@ -399,12 +399,13 @@ namespace DailyPerformanceWarningModule
 
             //依據設定值,取得缺曠資料
             List<AttendanceRecord> AttendanceList = new List<AttendanceRecord>();
-            if (Config.SingOrAll)
+            if (Config.DateMode == AttendanceConfigObj.Mode_Sem)
             {
                 AttendanceList = K12.Data.Attendance.Select(StudentIDList, null, null, null, new List<int>() { Config.SchoolYear }, new List<int>() { Config.Semester });
             }
             else
             {
+                //所有學期統計 或 依日期判斷,皆先全撈,再於下方迴圈依日期過濾
                 AttendanceList = K12.Data.Attendance.SelectByStudentIDs(StudentIDList);
             }
 
@@ -412,14 +413,34 @@ namespace DailyPerformanceWarningModule
             Dictionary<string, double> ConfigByName = tool.GetPeriodConfig();
             Dictionary<string, string> PeriodDic = tool.GetPeriodDic();
 
+            //缺曠節次 對應 課程節次(checkBoxX2:依據『對應課程節次』設定判斷時使用)
+            Dictionary<string, string> CoursePeriodDic = tool.GetCoursePeriodDic();
+
             foreach (AttendanceRecord Record in AttendanceList)
             {
+                //依日期判斷:略過不在區間內的缺曠紀錄
+                if (Config.DateMode == AttendanceConfigObj.Mode_Date)
+                {
+                    if (Record.OccurDate.Date < Config.StartDate.Date || Record.OccurDate.Date > Config.EndDate.Date)
+                        continue;
+                }
+
                 if (obj.StudentDic.ContainsKey(Record.RefStudentID))
                 {
                     foreach (AttendancePeriod Period in Record.PeriodDetail)
                     {
                         if (Config.AttendanceList.Contains(Period.AbsenceType))
                         {
+                            //依據『對應課程節次』設定判斷:CoursePeriod 為空白者不列入統計
+                            if (Config.ByCoursePeriod)
+                            {
+                                if (!CoursePeriodDic.ContainsKey(Period.Period) ||
+                                    string.IsNullOrWhiteSpace(CoursePeriodDic[Period.Period]))
+                                {
+                                    continue;
+                                }
+                            }
+
                             if (PeriodDic.ContainsKey(Period.Period))
                             {
                                 if (ConfigByName.ContainsKey(PeriodDic[Period.Period]))
@@ -448,17 +469,25 @@ namespace DailyPerformanceWarningModule
 
             //依據設定值,取得統計資料
             List<DemeritRecord> DemeritList = new List<DemeritRecord>();
-            if (Config.SingOrAll)
+            if (Config.DateMode == AttendanceConfigObj.Mode_Sem)
             {
                 DemeritList = K12.Data.Demerit.Select(StudentIDList, null, null, null, null, new List<int>() { Config.SchoolYear }, new List<int>() { Config.Semester });
             }
             else
             {
+                //所有學期統計 或 依日期判斷,皆先全撈,再於下方迴圈依日期過濾
                 DemeritList = K12.Data.Demerit.SelectByStudentIDs(StudentIDList);
             }
 
             foreach (DemeritRecord Record in DemeritList)
             {
+                //依日期判斷:略過不在區間內的懲戒紀錄
+                if (Config.DateMode == AttendanceConfigObj.Mode_Date)
+                {
+                    if (Record.OccurDate.Date < Config.StartDate.Date || Record.OccurDate.Date > Config.EndDate.Date)
+                        continue;
+                }
+
                 if (Record.Cleared != "是")
                 {
                     if (obj.StudentDic.ContainsKey(Record.RefStudentID))
@@ -479,17 +508,25 @@ namespace DailyPerformanceWarningModule
                 #region Merit
 
                 List<MeritRecord> MeritList = new List<MeritRecord>();
-                if (Config.SingOrAll)
+                if (Config.DateMode == AttendanceConfigObj.Mode_Sem)
                 {
                     MeritList = K12.Data.Merit.Select(StudentIDList, null, null, null, null, new List<int>() { Config.SchoolYear }, new List<int>() { Config.Semester });
                 }
                 else
                 {
+                    //所有學期統計 或 依日期判斷,皆先全撈,再於下方迴圈依日期過濾
                     MeritList = K12.Data.Merit.SelectByStudentIDs(StudentIDList);
                 }
 
                 foreach (MeritRecord Record in MeritList)
                 {
+                    //依日期判斷:略過不在區間內的獎勵紀錄
+                    if (Config.DateMode == AttendanceConfigObj.Mode_Date)
+                    {
+                        if (Record.OccurDate.Date < Config.StartDate.Date || Record.OccurDate.Date > Config.EndDate.Date)
+                            continue;
+                    }
+
                     if (obj.StudentDic.ContainsKey(Record.RefStudentID))
                     {
                         obj.StudentDic[Record.RefStudentID].MeritA += Record.MeritA.Value;

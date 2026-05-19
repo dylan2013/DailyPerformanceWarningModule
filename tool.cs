@@ -154,6 +154,24 @@ namespace DailyPerformanceWarningModule
 
         }
 
+        /// <summary>
+        /// 取得 缺曠節次名稱 對應 課程節次(PeriodMappingInfo.CoursePeriod)
+        /// </summary>
+        public static Dictionary<string, string> GetCoursePeriodDic()
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            List<K12.Data.PeriodMappingInfo> PeriodList = K12.Data.PeriodMapping.SelectAll();
+
+            foreach (K12.Data.PeriodMappingInfo info in PeriodList)
+            {
+                if (!dic.ContainsKey(info.Name))
+                {
+                    dic.Add(info.Name, info.CoursePeriod);
+                }
+            }
+            return dic;
+        }
+
         public static List<string> GetPeriodList()
         {
             List<string> list = new List<string>();

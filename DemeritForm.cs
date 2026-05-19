@@ -67,11 +67,21 @@ namespace DailyPerformanceWarningModule
             intSchoolYear1.Value = Config.SchoolYear;
             intSemester1.Value = Config.Semester;
 
-            //學年度與學期
-            if (Config.SingOrAll)
+            //判斷模式
+            if (Config.DateMode == AttendanceConfigObj.Mode_Sem)
                 cbSingSchoolYear.Checked = true;
+            else if (Config.DateMode == AttendanceConfigObj.Mode_Date)
+                checkBoxX1.Checked = true;
             else
-                cbSingSchoolYear.Checked = true;
+                cbAllSchoolYear.Checked = true;
+
+            dateTimeStart.Value = Config.StartDate;
+            dateTimeEnd.Value = Config.EndDate;
+
+            cbSingSchoolYear.CheckedChanged += Condition_CheckedChanged;
+            checkBoxX1.CheckedChanged += Condition_CheckedChanged;
+            cbAllSchoolYear.CheckedChanged += Condition_CheckedChanged;
+            UpdateConditionInputState();
 
             //統計
             cbStatistics.Checked = Config.StatisticsChange;
@@ -85,21 +95,48 @@ namespace DailyPerformanceWarningModule
             textBoxX1.Text = Config.DemeritMessage.Replace("\n", "\r\n");
         }
 
-        private void SaveConfig()
+        private bool SaveConfig()
         {
+            //依日期判斷時,先驗證日期(於異動 Config 前驗證,失敗則不存檔)
+            if (checkBoxX1.Checked)
+            {
+                if (dateTimeStart.IsEmpty || dateTimeEnd.IsEmpty)
+                {
+                    MsgBox.Show("請選擇起始日期與結束日期!");
+                    return false;
+                }
+                if (dateTimeStart.Value.Date > dateTimeEnd.Value.Date)
+                {
+                    MsgBox.Show("起始日期不可大於結束日期!");
+                    return false;
+                }
+            }
+
             Config.Run = cbIsRun.Checked;
             Config.StatisticsChange = cbStatistics.Checked;
 
-            //單或多學期
+            //判斷模式
             if (cbSingSchoolYear.Checked)
             {
+                Config.DateMode = AttendanceConfigObj.Mode_Sem;
                 Config.SingOrAll = true;
                 Config.SchoolYear = intSchoolYear1.Value;
                 Config.Semester = intSemester1.Value;
             }
+            else if (checkBoxX1.Checked)
+            {
+                Config.DateMode = AttendanceConfigObj.Mode_Date;
+                Config.SingOrAll = false;
+                Config.StartDate = dateTimeStart.Value.Date;
+                Config.EndDate = dateTimeEnd.Value.Date;
+                //指定學年期為預設學年期
+                Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
+                Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
+            }
             else
             {
-                //選擇為多學期時,並指定學年期圍預設學年期
+                //所有學期統計,指定學年期為預設學年期
+                Config.DateMode = AttendanceConfigObj.Mode_All;
                 Config.SingOrAll = false;
                 Config.SchoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
                 Config.Semester = int.Parse(K12.Data.School.DefaultSemester);
@@ -114,6 +151,23 @@ namespace DailyPerformanceWarningModule
             Config.DemeritMessage = textBoxX1.Text.Replace("\r\n", "\n");
 
             Config.SaveConfig();
+            return true;
+        }
+
+        /// <summary>
+        /// 依目前判斷模式,啟用/停用對應輸入欄位
+        /// </summary>
+        private void UpdateConditionInputState()
+        {
+            intSchoolYear1.Enabled = cbSingSchoolYear.Checked;
+            intSemester1.Enabled = cbSingSchoolYear.Checked;
+            dateTimeStart.Enabled = checkBoxX1.Checked;
+            dateTimeEnd.Enabled = checkBoxX1.Checked;
+        }
+
+        private void Condition_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateConditionInputState();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -139,7 +193,15 @@ namespace DailyPerformanceWarningModule
                 {
                     FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
 
-                    SaveConfig();
+                    if (!SaveConfig())
+                    {
+                        //存檔失敗(日期驗證未過),還原按鈕狀態並中止作業
+                        Run.BGW_Dem.RunWorkerCompleted -= BGW_Dem_RunWorkerCompleted;
+                        btnSendMessage.Enabled = true;
+                        btnSendMessage.Text = "查詢與推播";
+                        FISCA.Presentation.MotherForm.SetStatusBarMessage("");
+                        return;
+                    }
 
                     FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
 
@@ -192,7 +254,17 @@ namespace DailyPerformanceWarningModule
         private string SetText(string text)
         {
 
-            text = text.Replace("{{學年期}}", cbSingSchoolYear.Checked ? string.Format("「{0}」學年度　第「{1}」學期", Config.SchoolYear, Config.Semester) : "「所有學期」");
+            string dateText = string.Format("「{0}」至「{1}」", Config.StartDate.ToString("yyyy/MM/dd"), Config.EndDate.ToString("yyyy/MM/dd"));
+            string syText;
+            if (Config.DateMode == AttendanceConfigObj.Mode_Sem)
+                syText = string.Format("「{0}」學年度　第「{1}」學期", Config.SchoolYear, Config.Semester);
+            else if (Config.DateMode == AttendanceConfigObj.Mode_Date)
+                syText = dateText;
+            else
+                syText = "「所有學期」";
+
+            text = text.Replace("{{學年期}}", syText);
+            text = text.Replace("{{日期}}", Config.DateMode == AttendanceConfigObj.Mode_Date ? dateText : "");
             text = text.Replace("{{學年度}}", "" + Config.SchoolYear);
             text = text.Replace("{{學期}}", "" + Config.Semester);
             text = text.Replace("{{大過}}", "" + Config.DemeritA);
@@ -204,7 +276,13 @@ namespace DailyPerformanceWarningModule
 
         private void cbIsRun_CheckedChanged(object sender, EventArgs e)
         {
-            SaveConfig();
+            if (!SaveConfig())
+            {
+                //存檔失敗(日期驗證未過),還原勾選狀態
+                this.cbIsRun.CheckedChanged -= new System.EventHandler(this.cbIsRun_CheckedChanged);
+                cbIsRun.Checked = Config.Run;
+                this.cbIsRun.CheckedChanged += new System.EventHandler(this.cbIsRun_CheckedChanged);
+            }
         }
 
         private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
@@ -224,7 +302,8 @@ namespace DailyPerformanceWarningModule
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             string message = @"功能變數：　　　說明：
-{{學年期}}　　　「{0}」學年度 第「{1}」學期 or 「所有學期」
+{{學年期}}　　　「{0}」學年度 第「{1}」學期 or 「所有學期」 or 日期區間
+{{日期}}　　　　「2026/01/01」至「2026/05/19」(僅依日期判斷時)
 {{學年度}}　　　110
 {{學期}}　　　　1 or 2
 {{大過}}　　　　1~999
