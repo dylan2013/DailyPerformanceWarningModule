@@ -44,6 +44,7 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPushTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewX1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -108,7 +109,7 @@
             this.labelX1.Name = "labelX1";
             this.labelX1.Size = new System.Drawing.Size(313, 21);
             this.labelX1.TabIndex = 10;
-            this.labelX1.Text = "發送推播給以下對象:(本清單可移除不予發送之學生)";
+            this.labelX1.Text = "請選取要發送推播的學生(可按 Ctrl / Shift 多選，Ctrl+A 全選)";
             // 
             // btnExit
             // 
@@ -155,7 +156,8 @@
             this.Column4,
             this.Column5,
             this.Column1,
-            this.Column6});
+            this.Column6,
+            this.colPushTime});
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -223,6 +225,7 @@
             // 
             this.Column5.HeaderText = "學號";
             this.Column5.Name = "Column5";
+            this.Column5.Width = 85;
             // 
             // Column1
             // 
@@ -232,9 +235,15 @@
             // 
             // Column6
             // 
-            this.Column6.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Column6.HeaderText = "統計支數";
             this.Column6.Name = "Column6";
+            // 
+            // colPushTime
+            // 
+            this.colPushTime.HeaderText = "最近推播時間";
+            this.colPushTime.Name = "colPushTime";
+            this.colPushTime.ReadOnly = true;
+            this.colPushTime.Width = 180;
             // 
             // ViewDetail
             // 
@@ -276,5 +285,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPushTime;
     }
 }

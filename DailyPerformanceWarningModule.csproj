@@ -38,7 +38,12 @@
       <HintPath>Library\Aspose.Cells.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Campus.ePaperCloud, Version=1.0.0.14, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Behavior.Push">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Library\Behavior.Push.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Campus.ePaperCloud,Version=1.0.0.14, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Library\Campus.ePaperCloud.dll</HintPath>
       <Private>False</Private>
@@ -151,7 +156,6 @@
       <DependentUpon>IsViewForm_Open.cs</DependentUpon>
     </Compile>
     <Compile Include="KeyBoStudent.cs" />
-    <Compile Include="Message\SendMessage.cs" />
     <Compile Include="Message\ShowFieldForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,6 +218,8 @@
   <ItemGroup>
     <Content Include="Library\Aspose.Cells.dll" />
     <Content Include="Library\Aspose.Cells.xml" />
+    <Content Include="Library\Behavior.Push.dll" />
+    <Content Include="Library\Behavior.Push.xml" />
     <Content Include="Library\Campus.ePaperCloud.dll" />
     <Content Include="Library\Campus.ePaperCloud.pdb" />
     <Content Include="Library\Campus.Message.dll" />

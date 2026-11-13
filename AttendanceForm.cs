@@ -208,42 +208,36 @@ namespace DailyPerformanceWarningModule
 
         private void btnSendMessage_Click(object sender, EventArgs e)
         {
-            if (DSAServices.AccountType == AccountType.Greening)
+            //推播改由 Behavior.Push 發送(以推播金鑰授權),不再限定 Greening 帳號
+            if (!Run.BGW_Att.IsBusy)
             {
                 btnSendMessage.Enabled = false;
                 btnSendMessage.Text = "推播(開始發送作業)";
-                Run.BGW_Att.RunWorkerCompleted += BGW_Att_RunWorkerCompleted;
-                if (!Run.BGW_Att.IsBusy)
+
+                FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
+
+                if (!SaveConfig())
                 {
-                    FISCA.Presentation.MotherForm.SetStatusBarMessage("儲存設定...");
-
-                    if (!SaveConfig())
-                    {
-                        //存檔失敗(日期驗證未過),還原按鈕狀態並中止作業
-                        Run.BGW_Att.RunWorkerCompleted -= BGW_Att_RunWorkerCompleted;
-                        btnSendMessage.Enabled = true;
-                        btnSendMessage.Text = "查詢與推播";
-                        FISCA.Presentation.MotherForm.SetStatusBarMessage("");
-                        return;
-                    }
-
-                    FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
-
-                    IsSaveOrShow show = new IsSaveOrShow();
-                    show.IsSave = cbStatistics.Checked; //控制已經預警過的學生
-                    show.NowRun = true; //立即執行
-                    show.IsShow = false;
-                    Run.BGW_Att.RunWorkerAsync(show);
-                }
-                else
-                {
+                    //存檔失敗(日期驗證未過),還原按鈕狀態並中止作業
                     btnSendMessage.Enabled = true;
-                    MsgBox.Show("系統忙碌中請稍後再試!!");
+                    btnSendMessage.Text = "查詢與推播";
+                    FISCA.Presentation.MotherForm.SetStatusBarMessage("");
+                    return;
                 }
+
+                FISCA.Presentation.MotherForm.SetStatusBarMessage("開始取得預警清單...");
+
+                Run.BGW_Att.RunWorkerCompleted += BGW_Att_RunWorkerCompleted;
+
+                IsSaveOrShow show = new IsSaveOrShow();
+                show.IsSave = cbStatistics.Checked; //控制已經預警過的學生
+                show.NowRun = true; //立即執行
+                show.IsShow = false;
+                Run.BGW_Att.RunWorkerAsync(show);
             }
             else
             {
-                FISCA.Presentation.Controls.MsgBox.Show("必須是Greening帳號(如abc@gmail.com)");
+                MsgBox.Show("系統忙碌中請稍後再試!!");
             }
         }
 

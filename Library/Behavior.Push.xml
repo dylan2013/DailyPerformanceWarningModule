@@ -1,0 +1,577 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Behavior.Push</name>
+    </assembly>
+    <members>
+        <member name="T:Behavior.Push.PushApi">
+            <summary>
+            推播服務 API(授權、發送、發送紀錄)
+            本類別不顯示任何訊息,錯誤原因放在回傳結果中;需要畫面流程請使用 PushWorkflow
+            </summary>
+        </member>
+        <member name="F:Behavior.Push.PushApi.AccessTokenURL">
+            <summary>
+            取得AccessToken
+            </summary>
+        </member>
+        <member name="F:Behavior.Push.PushApi.PushURL">
+            <summary>
+            發送推播
+            </summary>
+        </member>
+        <member name="F:Behavior.Push.PushApi.HistoryListURL">
+            <summary>
+            查看發送紀錄，可以查看發送的訊息接收統計等資訊。
+            </summary>
+        </member>
+        <member name="F:Behavior.Push.PushApi._client">
+            <summary>
+            共用連線(HttpClient 設計上應重複使用,避免每次發送都建立新連線)
+            授權標頭由每個 Request 自帶,不設定在 DefaultRequestHeaders
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushApi.TryGetAccessToken(System.String)">
+            <summary>
+            依金鑰設定取得AccessToken
+            </summary>
+            <param name="clientName">金鑰設定的服務名稱,預設為「推播服務」</param>
+        </member>
+        <member name="M:Behavior.Push.PushApi.RequestAccessToken(System.String,System.String)">
+            <summary>
+            以指定的金鑰向驗證伺服器取得AccessToken
+            回應中沒有 access_token 時回傳 null；連線或 HTTP 狀態錯誤時拋出 HttpRequestException
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushApi.TryPush(System.String,System.String)">
+            <summary>
+            發送一則推播(JSON 格式請參考 PushSender.ToJson)
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushApi.GetHistoryAsync(System.String)">
+            <summary>
+            取得推播服務的發送紀錄(含接收、讀取統計)
+            連線或 HTTP 狀態錯誤時拋出 HttpRequestException
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushHistoryItem">
+            <summary>
+            推播服務的發送紀錄(PushApi.GetHistoryAsync)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.categoryName">
+            <summary>
+            分類名稱
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.title">
+            <summary>
+            標題
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.body">
+            <summary>
+            內容
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.scheduleTime">
+            <summary>
+            預計發送時間
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.receiverCount">
+            <summary>
+            接收人數
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.sendCount">
+            <summary>
+            發送數
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.readCount">
+            <summary>
+            讀取數
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushHistoryItem.lastUpdateTime">
+            <summary>
+            最後更新時間
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushHistorySender">
+            <summary>
+            發送紀錄中的發送端資訊
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushPayload">
+            <summary>
+            推播 API 的請求內容(序列化後送出)
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushReceiver">
+            <summary>
+            推播對象(對應推播 API 的 receiver)
+            請使用 PushReceiver.Teacher / Teachers / Student / Students 建立
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushReceiver.Teachers(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            推播給教師
+            無法轉為數字的系統編號會略過,全部無效時回傳 null
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushReceiver.Teacher(System.String)">
+            <summary>
+            推播給單一教師,系統編號無效時回傳 null
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushReceiver.Students(System.Collections.Generic.IEnumerable{System.String},System.Boolean,System.Boolean)">
+            <summary>
+            推播給學生本人及(或)家長
+            無法轉為數字的系統編號會略過,全部無效或兩種對象都沒勾選時回傳 null
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushReceiver.Student(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            推播給單一學生本人及(或)家長
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushReceiver.ToIDList(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            將系統編號轉為數字並去除重複
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.TeacherReceiver">
+            <summary>
+            推播對象:教師
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.StudentReceiver">
+            <summary>
+            推播對象:學生本人及(或)家長
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushConfig">
+            <summary>
+            推播金鑰設定的讀取與預設值
+            </summary>
+        </member>
+        <member name="F:Behavior.Push.PushConfig.DefaultClientName">
+            <summary>
+            推播服務在 UDT「campus.desktop.client.config」中的預設服務名稱(client_name)
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushConfig.Get(System.String)">
+            <summary>
+            取得指定服務的金鑰設定,未設定時回傳 null
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushConfig.InitDefault">
+            <summary>
+            資料庫沒有「推播服務」金鑰(或 Client ID / Client Secret 任一為空)時,填入內建的預設金鑰(PushSecret)
+            已有完整金鑰則不變更;建置時沒有 PushSecret.cs 則不處理
+            Behavior.Push 模組載入時會自動呼叫,各模組不需要自行呼叫
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushConfig.InitDefault(System.String,System.String,System.String)">
+            <summary>
+            資料庫沒有金鑰(或 Client ID / Client Secret 任一為空)時,填入指定的預設金鑰
+            已有完整金鑰則不變更;傳入的預設金鑰為空時不處理
+            (供「推播服務」以外的其他服務使用)
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushConfigUDT">
+            <summary>
+            服務金鑰設定(與 K12.Campus.Desktop.Push「服務金鑰管理」同一張表)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushConfigUDT.ClientName">
+            <summary>
+            服務名稱
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushConfigUDT.ClientID">
+            <summary>
+            服務 Client ID
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushConfigUDT.ClientSecret">
+            <summary>
+            服務 Client Secret
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushSecret">
+            <summary>
+            預設推播金鑰，資料庫尚未設定時自動填入
+            本檔已列入 .gitignore，不會上傳 Github(範本請參考 PushSecret.example.cs)
+            由 Behavior.Push 模組載入時(PushConfig.InitDefault)自動填入，各模組不需要再自行處理
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushPreview">
+            <summary>
+            發送推播前的預覽視窗,以其中一則呈現實際會送出的標題與內容
+            一般由 PushWorkflow.Confirm 開啟,也可自行使用
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushPreview.#ctor(System.String,System.String,System.Int32,System.String)">
+            <summary>
+            建立預覽視窗
+            </summary>
+            <param name="title">推播標題(與實際發送相同)</param>
+            <param name="body">推播內容(與實際發送相同)</param>
+            <param name="selectedCount">本次發送的總則數</param>
+            <param name="receiverText">推播對象的文字說明,沒有指定時不顯示</param>
+        </member>
+        <member name="F:Behavior.Push.PushPreview.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushPreview.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:Behavior.Push.PushPreview.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushLog">
+            <summary>
+            統一推播紀錄的查詢與儲存
+            </summary>
+        </member>
+        <member name="F:Behavior.Push.PushLog.DateFormat">
+            <summary>
+            資料日期的儲存格式
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushLog.ToDateString(System.DateTime)">
+            <summary>
+            將日期轉為 RefDate 的儲存格式
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushLog.Select(System.String,System.DateTime,System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            查詢推播紀錄
+            </summary>
+            <param name="pushType">推播類型</param>
+            <param name="refDate">資料日期</param>
+            <param name="refIDs">限定資料對象(null 表示不限定;空集合直接回傳空清單)</param>
+            <param name="receiverIDs">限定接收者(null 表示不限定;空集合直接回傳空清單)</param>
+        </member>
+        <member name="M:Behavior.Push.PushLog.Latest(System.Collections.Generic.IEnumerable{Behavior.Push.PushLogUDT},System.Func{Behavior.Push.PushLogUDT,System.String})">
+            <summary>
+            依自訂 Key 分組,每組只留推播時間最新的一筆(用於畫面顯示「是否推播」)
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushLog.Save(System.Collections.Generic.IEnumerable{Behavior.Push.PushLogUDT})">
+            <summary>
+            儲存推播紀錄
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushLog.ToInList(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            組成 SQL in 條件內容,沒有任何值時回傳 null
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushLogUDT">
+             <summary>
+             統一推播紀錄(每則推播、每個資料對象一筆)
+            
+             會用來查詢或比對的資料放在獨立欄位(有索引);
+             只用來顯示、各功能不同的資料放在 detail(JSON),以 SetDetail / GetDetail 存取
+            
+             建立方式:發送前把紀錄放進 PushRequest.Logs,只需填寫 PushType、Ref*、Receiver*、RefDate、detail(節次等功能專屬資料請放 detail);
+             發送成功後 PushSender 會自動補上 UUID、Status、PushTime、PushBy、Title、Body 並儲存
+             </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.PushType">
+            <summary>
+            推播類型(由各功能自訂,例如「未點名」、「未到校」)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.RefType">
+            <summary>
+            資料對象類型(例如 course、class、student)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.RefID">
+            <summary>
+            資料對象系統編號(例如課程、班級、學生的 ID)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.ReceiverType">
+            <summary>
+            接收者類型(teacher、student)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.ReceiverID">
+            <summary>
+            接收者系統編號(教師 ID、學生 ID)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.RefDate">
+            <summary>
+            資料日期(yyyy-MM-dd,例如應點名日期、未到校日期;沒有日期概念的推播可留空),建議以 PushLog.ToDateString 轉換
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.PushTime">
+            <summary>
+            推播時間(伺服器時間 yyyy-MM-dd HH:mm:ss)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.PushBy">
+            <summary>
+            執行推播的登入帳號
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.UUID">
+            <summary>
+            推播服務回傳的 uuid
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.Status">
+            <summary>
+            推播服務回傳的 status
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.Title">
+            <summary>
+            推播標題(實際送出的內容)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.Body">
+            <summary>
+            推播內容(實際送出的內容,一般換行)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushLogUDT.Detail">
+            <summary>
+            各功能自訂的顯示資料(JSON 物件),請以 SetDetail / GetDetail 存取
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushLogUDT.SetDetail(System.String,System.String)">
+            <summary>
+            設定 detail 中的一個值
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushLogUDT.GetDetail(System.String)">
+            <summary>
+            取得 detail 中的一個值,不存在時回傳空字串
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushLogUDT.GetDetailObject">
+            <summary>
+            取得 detail 的 JSON 物件(格式錯誤或空白時回傳空物件)
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.Program">
+            <summary>
+            Behavior.Push 為共用函式庫,不註冊任何畫面功能
+            使用方式請參考 README.md
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushRequest">
+            <summary>
+            一則待發送的推播(標題、內容、對象),由各功能組好後交給 PushSender / PushWorkflow 發送
+            </summary>
+        </member>
+        <member name="F:Behavior.Push.PushRequest.DefaultCategoryName">
+            <summary>
+            未指定分類時使用的分類名稱
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushRequest.Title">
+            <summary>
+            標題
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushRequest.Body">
+            <summary>
+            內容(一般換行即可,發送前會自動轉為 APP 使用的 &lt;br&gt;)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushRequest.CategoryName">
+            <summary>
+            分類(APP 上顯示的來源名稱,例如「1Campus 課堂點名系統」),未指定時為「通知」
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushRequest.Receivers">
+            <summary>
+            推播對象,以 PushReceiver.Teacher / Student 等建立,可放多個
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushRequest.Logs">
+            <summary>
+            發送成功後要寫入的推播紀錄(可不放,也可一則推播放多筆,例如一位學生多個節次)
+            只需填寫 PushType、Ref*、Receiver*、RefDate、detail(節次等功能專屬資料請放 detail),其餘由 PushSender 自動補上並儲存
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushRequest.State">
+            <summary>
+            呼叫端自帶的資料(例如畫面上的資料列物件),
+            發送完成後可從 PushResult.Request.State 取回
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushRequest.AddReceiver(Behavior.Push.PushReceiver)">
+            <summary>
+            加入推播對象(null 會略過),回傳自己以便串接
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushRequest.AddLog(Behavior.Push.PushLogUDT)">
+            <summary>
+            加入推播紀錄,回傳自己以便串接
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushResult">
+            <summary>
+            單則推播的發送結果
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushResult.Status">
+            <summary>
+            推播服務回傳的 status
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushResult.UUID">
+            <summary>
+            推播服務回傳的 uuid
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushResult.Error">
+            <summary>
+            失敗原因
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushBatchResult">
+            <summary>
+            一個批次的發送結果
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushBatchResult.ServerTime">
+            <summary>
+            本批次的伺服器時間(yyyy-MM-dd HH:mm:ss)
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushBatchResult.TokenError">
+            <summary>
+            取得授權失敗的原因;有值代表整批都沒有發送
+            </summary>
+        </member>
+        <member name="P:Behavior.Push.PushBatchResult.LogError">
+            <summary>
+            推播紀錄儲存失敗的原因;有值代表推播已送出,但紀錄沒有存進資料庫
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushTokenResult">
+            <summary>
+            取得 AccessToken 的結果
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushApiResult">
+            <summary>
+            呼叫推播 API 的結果
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushSender">
+            <summary>
+            推播發送(不含任何畫面操作,可供各功能或排程直接呼叫)
+            流程:取得伺服器時間 → 取得授權 → 逐則發送 → 儲存成功者的推播紀錄 → 回傳每一則的結果
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushSender.SendAsync(System.Collections.Generic.IList{Behavior.Push.PushRequest},System.IProgress{System.Int32},System.String)">
+            <summary>
+            發送一批推播
+            </summary>
+            <param name="requests">待發送的推播</param>
+            <param name="progress">每發送完一則回報已完成的則數(可不指定)</param>
+            <param name="clientName">金鑰設定的服務名稱,預設為「推播服務」</param>
+        </member>
+        <member name="M:Behavior.Push.PushSender.FillLogs(Behavior.Push.PushRequest,Behavior.Push.PushResult,System.String,System.String)">
+            <summary>
+            補上推播紀錄中由發送結果決定的欄位
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushSender.ToJson(Behavior.Push.PushRequest)">
+            <summary>
+            轉為推播 API 的 JSON 格式
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushSender.GetServerTime">
+            <summary>
+            取得伺服器時間 yyyy-MM-dd HH:mm:ss(以資料庫時間為準,避免各用戶端電腦時間不一致)
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushTemplate">
+            <summary>
+            推播範本:讀取學校設定與套入變數
+            範本內以 ${變數名稱} 表示要替換的內容,例如 ${日期}、${姓名}
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushTemplate.Load(System.String,System.String,System.String)">
+            <summary>
+            讀取學校設定(K12.Data.School.Configuration)中的範本,未設定時使用預設範本
+            </summary>
+            <param name="configName">設定組名稱,例如「教師點名設定_TeacherConfig.cs」</param>
+            <param name="configKey">設定名稱,例如「點名推播通知預設訊息」</param>
+            <param name="defaultTemplate">預設範本</param>
+        </member>
+        <member name="M:Behavior.Push.PushTemplate.Save(System.String,System.String,System.String)">
+            <summary>
+            將範本存回學校設定
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushTemplate.Render(System.String,System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            將變數套入範本
+            </summary>
+            <param name="template">範本</param>
+            <param name="vars">變數名稱(不含 ${})與值</param>
+        </member>
+        <member name="M:Behavior.Push.PushTemplate.ToPushBody(System.String)">
+            <summary>
+            將推播內文的換行轉為 &lt;br&gt;,APP 才會正確分段顯示
+            (範本與預覽畫面維持一般換行,只在發送前轉換;PushSender 會自動處理)
+            </summary>
+        </member>
+        <member name="T:Behavior.Push.PushWorkflow">
+            <summary>
+            推播的畫面流程(預覽確認 → 發送 → 顯示結果),供各推播畫面共用
+            一般情況直接呼叫 RunAsync;若確認後、發送前需要做其他事,可分開呼叫 Confirm 與 SendAsync
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushWorkflow.RunAsync(System.Windows.Forms.Control,System.Collections.Generic.IList{Behavior.Push.PushRequest},Behavior.Push.PushRequest,System.String,System.Action{Behavior.Push.PushBatchResult},System.String)">
+            <summary>
+            預覽確認後發送
+            </summary>
+            <param name="trigger">觸發推播的按鈕,發送期間會停用以避免重複發送(可為 null)</param>
+            <param name="requests">待發送的推播</param>
+            <param name="previewRequest">預覽用的那一則(null 時以第一則預覽)</param>
+            <param name="receiverText">預覽畫面顯示的推播對象說明(可為 null)</param>
+            <param name="onSent">至少一則成功時呼叫(例如寫系統紀錄),會在顯示結果訊息之前執行;推播紀錄已自動儲存,不需在此處理</param>
+            <param name="unit">結果訊息中的單位,例如「筆」、「位學生」</param>
+            <returns>使用者取消時回傳 null</returns>
+        </member>
+        <member name="M:Behavior.Push.PushWorkflow.Confirm(System.Collections.Generic.IList{Behavior.Push.PushRequest},Behavior.Push.PushRequest,System.String)">
+            <summary>
+            顯示預覽畫面,使用者按下發送時回傳 true
+            </summary>
+        </member>
+        <member name="M:Behavior.Push.PushWorkflow.SendAsync(System.Windows.Forms.Control,System.Collections.Generic.IList{Behavior.Push.PushRequest},System.Action{Behavior.Push.PushBatchResult},System.String)">
+            <summary>
+            發送並顯示結果(不經過預覽)
+            </summary>
+            <returns>發送結果;取得授權失敗時 TokenError 有值</returns>
+        </member>
+        <member name="M:Behavior.Push.PushWorkflow.ShowResult(Behavior.Push.PushBatchResult,System.String)">
+            <summary>
+            顯示發送結果;有失敗時一併列出失敗原因(相同原因只列一次)
+            </summary>
+        </member>
+    </members>
+</doc>
